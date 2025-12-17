@@ -2,8 +2,6 @@ package com.sanal.omdb.services;
 
 import com.sanal.omdb.models.*;
 
-// import com.sanal.omdb.models.*;
-
 public class IdentificarClasse {
     
     public Class<?> identificarTipo (String json) {
