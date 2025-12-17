@@ -89,8 +89,9 @@ public class Titulo {
     @Override
     public String toString() {
         return "Titulo: " + titulo + 
-                ", Lançamento: " + dataLancamento +
-                ", Avaliação: " + avaliacao;
+                ", Tipo: " + type +
+                ", Avaliação: " + avaliacao + 
+                ", Lançamento: " + dataLancamento;
     }
 
 }
