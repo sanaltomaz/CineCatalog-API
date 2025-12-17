@@ -1,35 +1,67 @@
 package com.sanal.omdb.models;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
+// import com.sanal.omdb.models.*;
+// import com.sanal.omdb.services.identificarClasse;
 
 public class Titulo {
+    
     private String type;
     private String titulo;
     private Integer temporadas;
     private Integer numeroEpisodeo;
     private Double duracao;
-    private LocalDate lancamento;
     private Double avaliacao;
+    private LocalDate dataLancamento;
 
-    public Titulo(String type, String titulo, 
-                        Integer temporadas,
-                        Integer numeroEpisodeo,
-                        Double duracao,
-                        LocalDate lancamento,
-                        Double avaliacao) {
-        if (this.type == "movie") {
-            // Tratar dados de filme
-        } else {
-            // Tratar dados de série
+    // private identificarClasse identificador = new identificarClasse();
+
+    public Titulo (DadosFilme dados) {
+        this.type = dados.type();
+        this.titulo = dados.titulo();
+        this.duracao = Double.valueOf(dados.duracao().replace(" min", ""));
+
+        try {
+            this.avaliacao = Double.valueOf(dados.avaliacao());
+        } catch (NumberFormatException e) {
+            this.avaliacao = 0.0;
         }
-        this.titulo = titulo;
-        this.temporadas = temporadas;
-        this.numeroEpisodeo = numeroEpisodeo;
-        this.duracao = duracao;
-        this.lancamento = lancamento;
-        this.avaliacao = avaliacao;
 
-        this.avaliacao = avaliacao;
+        try {
+            this.dataLancamento = LocalDate.parse(dados.dataLancamento());
+        } catch (DateTimeException ex) {
+            this.dataLancamento = null;
+        }
+    }
+
+    public Titulo (DadosSerie dados) {
+        this.type = dados.type();
+        this.titulo = dados.titulo();
+        this.temporadas = Integer.valueOf(dados.temporadas());
+
+        try {
+            this.avaliacao = Double.valueOf(dados.avaliacao());
+        } catch (NumberFormatException e) {
+            this.avaliacao = 0.0;
+        }
+
+        try {
+            this.dataLancamento = LocalDate.parse(dados.dataLancamento());
+        } catch (DateTimeException ex) {
+            this.dataLancamento = null;
+        }
+    }
+
+    public Titulo (DadosEpisodio dados) {
+        this.titulo = dados.titulo();
+        this.numeroEpisodeo = dados.numero();
+
+        try {
+            this.avaliacao = Double.valueOf(dados.avaliacao());
+        } catch (NumberFormatException e) {
+            this.avaliacao = 0.0;
+        }
     }
 
     public String getType() {
@@ -47,11 +79,18 @@ public class Titulo {
     public Double getDuracao() {
         return duracao;
     }
-    public LocalDate getLancamento() {
-        return lancamento;
-    }
     public Double getAvaliacao() {
         return avaliacao;
+    }
+    public LocalDate getDataLancamento() {
+        return dataLancamento;
+    }
+
+    @Override
+    public String toString() {
+        return "Titulo: " + titulo + 
+                ", Lançamento: " + dataLancamento +
+                ", Avaliação: " + avaliacao;
     }
 
 }
