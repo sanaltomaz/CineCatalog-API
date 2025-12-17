@@ -11,7 +11,7 @@ public class IdentificarClasse {
             return DadosFilme.class;
         } else if (json.contains("\"Type\":\"series\"")) {
             return DadosSerie.class;
-        } else if (!json.contains("\"Type\":")) {
+        } else if (json.contains("\"Episode\":")) {
             return DadosEpisodio.class;
         }
         throw new IllegalArgumentException("Tipo desconhecido no JSON");

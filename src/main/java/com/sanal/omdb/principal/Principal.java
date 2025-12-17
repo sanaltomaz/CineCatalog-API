@@ -17,7 +17,7 @@ public class Principal {
     String endereco = dotenv.get("ENDERECO");
     String apiKey = dotenv.get("API_KEY");
 
-    public void Menu() {
+    public void iniciarMenu() {
         System.out.println("Digite o nome de um Titulo: ");
         String nomeDoFilme = scanner.nextLine();
 
