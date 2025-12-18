@@ -2,8 +2,7 @@ package com.sanal.omdb.services;
 
 import com.sanal.omdb.models.*;
 
-public class IdentificarClasse {
-    
+public class IdentificarTipo {
     public Class<?> identificarTipo (String json) {
         if (json.contains("\"Type\":\"movie\"")) {
             return DadosFilme.class;
