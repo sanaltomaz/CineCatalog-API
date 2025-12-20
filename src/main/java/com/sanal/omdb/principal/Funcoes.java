@@ -2,6 +2,7 @@ package com.sanal.omdb.principal;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,5 +65,23 @@ public class Funcoes {
             .sorted(Comparator.comparing(DadosEpisodio::avaliacao))
             .limit(5)
             .forEach(System.out::println);
+    }
+
+    public void exibirEstatisticasSerie(DadosSerie serie) {
+        System.out.println("Exibindo estatísticas da série: " + serie.titulo());
+        // Implementar a lógica para exibir estatísticas da série aqui
+        var temporadas = listarEpisodios(serie);
+        List<Titulo> episodios = temporadas.stream()
+                .flatMap(t -> t.episodios().stream()
+                        .map(d -> new Titulo(d)))
+                .collect(Collectors.toList());
+        
+        DoubleSummaryStatistics est = episodios.stream()
+                .filter(e -> e.getAvaliacao() > 0.0)
+                .collect(Collectors.summarizingDouble(Titulo::getAvaliacao));
+        System.out.println("Média: " + est.getAverage());
+        System.out.println("Melhor episódio: " + est.getMax());
+        System.out.println("Pior episódio: " + est.getMin());
+
     }
 }
