@@ -23,6 +23,8 @@ public class Principal {
         System.out.println(dados);
 
         Funcoes.listarEpisodios((DadosSerie) dados);
+        // var temporadas =  Funcoes.listarEpisodios((DadosSerie) dados);
+        // Funcoes.buscarEpisodioPorNumero(temporadas, 3);
 
         // if (classe == DadosFilme.class) {
         //     DadosFilme dados = converte.obterDados(json, DadosFilme.class);

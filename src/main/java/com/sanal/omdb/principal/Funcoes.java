@@ -47,12 +47,21 @@ public class Funcoes {
             temporadas.add(dadosTemporada);
         }
 
+        // return temporadas;
         temporadas.forEach(System.out::println);
     }
 
-    public void buscarEpisodioPorNumero(int numero) {
+    public void buscarEpisodioPorNumero(DadosSerie serie, int numero) {
         System.out.println("Buscando episódio número: " + numero);
         // Implementar a lógica para buscar um episódio por número aqui
+        try {
+            String json = retornarDadosEpisodeos(serie.titulo(), numero);
+            DadosEpisodio episodio =
+                converte.obterDados(json, DadosEpisodio.class);
+            System.out.println(episodio);
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar o episódio: " + e.getMessage());
+        }
     }
     public void listarMelhoresEpisodios() {
         System.out.println("Listando melhores episódios...");
