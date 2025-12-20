@@ -1,7 +1,9 @@
 package com.sanal.omdb.principal;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.sanal.omdb.models.*;
 
@@ -12,7 +14,7 @@ public class Funcoes {
     private ConverteDados converte = new ConverteDados();
     private RetornoDados retorno = new RetornoDados();
 
-    public void listarEpisodios(DadosSerie serie) {
+    public List<DadosTemporada> listarEpisodios(DadosSerie serie) {
         System.out.println("Listando episódios da temporada da série: " + serie.titulo());
 
         List<DadosTemporada> temporadas = new ArrayList<>();
@@ -28,13 +30,23 @@ public class Funcoes {
             temporadas.add(dadosTemporada);
         }
 
-        // return temporadas;
-        temporadas.forEach(System.out::println);
+        return temporadas;
+        // temporadas.forEach(System.out::println);
     }
 
-    public void listarMelhoresEpisodios() {
+    public void listarMelhoresEpisodios(DadosSerie serie) {
+        var temporadas = listarEpisodios(serie);
+        List<DadosEpisodio> dadosEpisodio = temporadas.stream()
+            .flatMap(t -> t.episodios().stream())
+            .collect(Collectors.toList());
+
         System.out.println("Listando melhores episódios...");
         // Implementar a lógica para listar os melhores episódios aqui
+        dadosEpisodio.stream()
+            .filter(e -> !e.avaliacao().equals("N/A"))
+            .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+            .limit(5)
+            .forEach(System.out::println);
     }
 
     public void listarPioresEpisodios() {

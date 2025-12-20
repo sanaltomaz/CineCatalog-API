@@ -33,7 +33,8 @@ public class Principal {
                     // System.out.println(dados);
 
                     if (tipoClass == DadosSerie.class) {
-                        Funcoes.listarEpisodios((DadosSerie) dados);
+                        // Funcoes.listarEpisodios((DadosSerie) dados);
+                        Funcoes.listarMelhoresEpisodios((DadosSerie) dados);
                     } else if (tipoClass == DadosFilme.class) {
                         System.out.println((DadosFilme) dados);
                     }
