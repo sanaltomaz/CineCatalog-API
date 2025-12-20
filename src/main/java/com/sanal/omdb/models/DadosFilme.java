@@ -11,4 +11,11 @@ public record DadosFilme(
     @JsonAlias("Runtime") String duracao,
     @JsonAlias("Released") String dataLancamento 
 ) {
+    @Override
+    public String toString() {
+        return "Título: " + titulo + "\n" +
+               "Duração: " + duracao + "\n" +
+               "Avaliação IMDb: " + avaliacao + "\n" +
+               "Data de Lançamento: " + dataLancamento + "\n";
+    }
 }

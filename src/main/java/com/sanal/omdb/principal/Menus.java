@@ -17,7 +17,7 @@ public class Menus {
     public void funcoesMenu(Class<?> tipoClass) {
         if (tipoClass == DadosSerie.class) {
             System.out.println("Funções disponíveis para séries:");
-            System.out.println("1. Listar episódios");
+            System.out.println("1. Listar todos episódios");
             System.out.println("2. Buscar episódio por número");
             System.out.println("Em criação...");
             System.out.println("3. Buscar episódios por temporada");

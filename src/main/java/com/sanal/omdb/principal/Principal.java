@@ -2,6 +2,8 @@ package com.sanal.omdb.principal;
 
 import java.util.Scanner;
 import com.sanal.omdb.services.IdentificarTipo;
+import com.sanal.omdb.services.RetornoDados;
+import com.sanal.omdb.models.DadosFilme;
 import com.sanal.omdb.models.DadosSerie;
 import com.sanal.omdb.services.ConverteDados;
 
@@ -12,6 +14,7 @@ public class Principal {
     private Menus menus = new Menus();
     
     private IdentificarTipo identificador = new IdentificarTipo();
+    private RetornoDados converte = new RetornoDados();
 
     public void iniciarAplicacao() {
         menus.iniciarMenus();
@@ -23,13 +26,17 @@ public class Principal {
                     System.out.println("Digite o nome de um Titulo: ");
                     String nomeDoFilme = scanner.nextLine();
 
-                    var json = Funcoes.retornarDadosTitulo(nomeDoFilme);
+                    var json = converte.retornarDadosTitulo(nomeDoFilme);
 
                     Class<?> tipoClass = identificador.identificarTipo(json);
                     Object dados = new ConverteDados().obterDados(json, tipoClass);
-                    System.out.println(dados);
+                    // System.out.println(dados);
 
-                    Funcoes.listarEpisodios((DadosSerie) dados);
+                    if (tipoClass == DadosSerie.class) {
+                        Funcoes.listarEpisodios((DadosSerie) dados);
+                    } else if (tipoClass == DadosFilme.class) {
+                        System.out.println((DadosFilme) dados);
+                    }
                     // buscarTitulo();
                     break;
                 case 2:
