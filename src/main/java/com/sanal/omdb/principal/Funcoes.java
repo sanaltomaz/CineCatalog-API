@@ -49,8 +49,20 @@ public class Funcoes {
             .forEach(System.out::println);
     }
 
-    public void listarPioresEpisodios() {
+    public void listarPioresEpisodios(DadosSerie serie) {
         System.out.println("Listando piores episódios...");
         // Implementar a lógica para listar os piores episódios aqui
+        var temporadas = listarEpisodios(serie);
+        List<DadosEpisodio> dadosEpisodio = temporadas.stream()
+            .flatMap(t -> t.episodios().stream())
+            .collect(Collectors.toList());
+
+        System.out.println("Listando melhores episódios...");
+        // Implementar a lógica para listar os melhores episódios aqui
+        dadosEpisodio.stream()
+            .filter(e -> !e.avaliacao().equals("N/A"))
+            .sorted(Comparator.comparing(DadosEpisodio::avaliacao))
+            .limit(5)
+            .forEach(System.out::println);
     }
 }
