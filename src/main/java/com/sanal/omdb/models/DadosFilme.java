@@ -13,7 +13,7 @@ public record DadosFilme(
 ) {
     @Override
     public String toString() {
-        return "Título: " + titulo + "\n" +
+        return "\nTítulo: " + titulo + "\n" +
                "Duração: " + duracao + "\n" +
                "Avaliação IMDb: " + avaliacao + "\n" +
                "Data de Lançamento: " + dataLancamento + "\n";

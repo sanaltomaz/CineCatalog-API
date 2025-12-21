@@ -10,7 +10,7 @@ import com.sanal.omdb.services.ConverteDados;
 public class Principal {
     
     private Scanner scanner = new Scanner(System.in);
-    private Funcoes Funcoes = new Funcoes();
+    // private Funcoes Funcoes = new Funcoes();
     private Menus menus = new Menus();
     
     private IdentificarTipo identificador = new IdentificarTipo();
@@ -33,13 +33,13 @@ public class Principal {
                     // System.out.println(dados);
 
                     if (tipoClass == DadosSerie.class) {
-                        // Funcoes.listarEpisodios((DadosSerie) dados);
-                        Funcoes.exibirEstatisticasSerie((DadosSerie) dados);
+                        menus.funcoesMenu(DadosSerie.class);
+                        int opcaoSerie = scanner.nextInt();
+                        scanner.nextLine(); 
+                        menus.funcoesMenuSerie((DadosSerie) dados, opcaoSerie);
                     } else if (tipoClass == DadosFilme.class) {
                         System.out.println((DadosFilme) dados);
                     }
-                    // buscarTitulo();
-                    break;
                 case 2:
                     System.out.println("Saindo da aplicação. Até mais!");
                     break;
