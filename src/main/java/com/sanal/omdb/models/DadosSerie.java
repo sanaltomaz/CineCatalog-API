@@ -9,7 +9,8 @@ public record DadosSerie(
     @JsonAlias("Title") String titulo,
     @JsonAlias("totalSeasons") Integer temporadas,
     @JsonAlias("imdbRating") String avaliacao,
-    @JsonAlias("Released") String dataLancamento 
+    @JsonAlias("Released") String dataLancamento,
+    @JsonAlias("Plot") String sinapse
 ) {   
     @Override
     public String toString() {

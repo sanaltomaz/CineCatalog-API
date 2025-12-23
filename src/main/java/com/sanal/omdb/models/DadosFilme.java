@@ -9,7 +9,8 @@ public record DadosFilme(
     @JsonAlias("Title") String titulo,
     @JsonAlias("imdbRating") String avaliacao,
     @JsonAlias("Runtime") String duracao,
-    @JsonAlias("Released") String dataLancamento 
+    @JsonAlias("Released") String dataLancamento,
+    @JsonAlias("Plot") String sinapse
 ) {
     @Override
     public String toString() {

@@ -5,6 +5,8 @@ import java.time.LocalDate;
 // import com.sanal.omdb.models.*;
 // import com.sanal.omdb.services.identificarClasse;
 
+import com.sanal.omdb.services.ConsumoGPT;
+
 public class Titulo {
     
     private String type;
@@ -14,12 +16,14 @@ public class Titulo {
     private Double duracao;
     private Double avaliacao;
     private LocalDate dataLancamento;
+    private String sinapse;
 
     // private identificarClasse identificador = new identificarClasse();
 
     public Titulo (DadosFilme dados) {
         this.type = dados.type();
         this.titulo = dados.titulo();
+        this.sinapse = ConsumoGPT.obterTraducao(dados.sinapse().trim());
         this.duracao = Double.valueOf(dados.duracao().replace(" min", ""));
 
         try {
@@ -38,6 +42,7 @@ public class Titulo {
     public Titulo (DadosSerie dados) {
         this.type = dados.type();
         this.titulo = dados.titulo();
+        this.sinapse = ConsumoGPT.obterTraducao(dados.sinapse().trim());
         this.temporadas = Integer.valueOf(dados.temporadas());
 
         try {
@@ -91,7 +96,8 @@ public class Titulo {
         return "Titulo: " + titulo + 
                 ", Tipo: " + type +
                 ", Avaliação: " + avaliacao + 
-                ", Lançamento: " + dataLancamento;
+                ", Lançamento: " + dataLancamento +
+                ", Sinapse: " + sinapse;
     }
 
 }
