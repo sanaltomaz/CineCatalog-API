@@ -18,7 +18,7 @@ public class Titulo {
     private LocalDate dataLancamento;
     private String sinapse;
 
-    // private identificarClasse identificador = new identificarClasse();
+    // private ConsumoGPT consumoGPT = new ConsumoGPT();
 
     public Titulo (DadosFilme dados) {
         this.type = dados.type();
@@ -96,7 +96,7 @@ public class Titulo {
         return "Titulo: " + titulo + 
                 ", Tipo: " + type +
                 ", Avaliação: " + avaliacao + 
-                ", Lançamento: " + dataLancamento +
+                ", Lançamento: " + dataLancamento + 
                 ", Sinapse: " + sinapse;
     }
 

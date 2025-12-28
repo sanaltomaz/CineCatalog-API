@@ -17,6 +17,7 @@ public record DadosFilme(
         return "\nTítulo: " + titulo + "\n" +
                "Duração: " + duracao + "\n" +
                "Avaliação IMDb: " + avaliacao + "\n" +
-               "Data de Lançamento: " + dataLancamento + "\n";
+               "Data de Lançamento: " + dataLancamento + "\n" + 
+                "Sinapse: " + sinapse;
     }
 }

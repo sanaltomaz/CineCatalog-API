@@ -1,25 +1,29 @@
 package com.sanal.omdb.services;
 
-// import com.openai.client.OpenAIClient;
-// import com.openai.client.okhttp.OpenAIOkHttpClient;
-// import com.openai.models.responses.Response;
-// import com.openai.models.responses.ResponseCreateParams;
-// import com.openai.service.OpenAiService;
-import com.theokanning.openai.completion.CompletionRequest;
-import com.theokanning.openai.service.OpenAiService;
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.chat.completions.ChatCompletion;
+import com.openai.models.chat.completions.ChatCompletionCreateParams;
 
 public class ConsumoGPT {
     public static String obterTraducao(String texto) {
-        OpenAiService service = new OpenAiService(System.getenv("GPT_API_KEY"));
 
-        CompletionRequest requisicao = CompletionRequest.builder()
+        OpenAIClient client = OpenAIOkHttpClient.fromEnv();
+
+        ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
                 .model("gpt-5-nano")
-                .prompt("traduza para o português o texto: " + texto)
-                .maxTokens(1000)
-                .temperature(0.7)
+                .addUserMessage("Traduza para o português: " + texto)
                 .build();
 
-        var resposta = service.createCompletion(requisicao);
-        return resposta.getChoices().get(0).getText();
+        ChatCompletion chatCompletion = client.chat() 
+                .completions()
+                .create(params);
+
+        return chatCompletion.choices()
+                .get(0)
+                .message()
+                .content()
+                .orElse("");
     }
 }
+

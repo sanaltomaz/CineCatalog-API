@@ -16,6 +16,7 @@ public record DadosSerie(
     public String toString() {
         return "Título: " + titulo + "\n" +
                "Total de Temporadas: " + temporadas + "\n" +
-               "Avaliação IMDb: " + avaliacao + "\n";
+               "Avaliação IMDb: " + avaliacao + "\n" + 
+                "Sinapse: " + sinapse;
     }
 }
