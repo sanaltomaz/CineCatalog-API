@@ -6,6 +6,7 @@ import com.sanal.omdb.models.*;
 import com.sanal.omdb.services.ConverteDados;
 import com.sanal.omdb.services.IdentificarTipo;
 import com.sanal.omdb.services.RetornoDados;
+import com.sanal.omdb.services.TituloFactory;
 
 public class Menus {
     private Funcoes funcoes = new Funcoes();
@@ -34,7 +35,7 @@ public class Menus {
                     if (dados instanceof DadosSerie) {
                         opcoesSerie((DadosSerie) dados);
                     } else if (dados instanceof DadosFilme) {
-                        Titulo t = new Titulo((DadosFilme) dados);
+                        Titulo t = new TituloFactory().fromFilme((DadosFilme) dados, null);
                         System.out.println(t);
                     } else {
                         System.out.println("Tipo de título desconhecido.");
@@ -74,7 +75,7 @@ public class Menus {
 
         switch (escolha) {
             case 1:
-                Titulo tituloSerie = new Titulo(serie);
+                Titulo tituloSerie = new TituloFactory().fromSerie(serie, null);
                 System.out.println(tituloSerie);
                 break;
             case 2:

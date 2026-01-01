@@ -10,6 +10,7 @@ import com.sanal.omdb.models.*;
 
 import com.sanal.omdb.services.ConverteDados;
 import com.sanal.omdb.services.RetornoDados;
+import com.sanal.omdb.services.TituloFactory;
 
 public class Funcoes {
     private ConverteDados converte = new ConverteDados();
@@ -73,7 +74,7 @@ public class Funcoes {
 
         List<Titulo> episodios = temporadas.stream()
                 .flatMap(t -> t.episodios().stream()
-                        .map(d -> new Titulo(d)))
+                        .map(d -> new TituloFactory().fromEpisodio(d)))
                 .collect(Collectors.toList());
         
         DoubleSummaryStatistics est = episodios.stream()

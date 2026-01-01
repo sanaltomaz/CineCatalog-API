@@ -1,122 +1,94 @@
 package com.sanal.omdb.models;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
 
-import com.sanal.omdb.services.ConsumoGPT;
-
 public class Titulo {
-    private String type;
-    private String titulo;
-    private Integer temporadas;
-    private Integer numeroEpisodeo;
-    private Double duracao;
-    private Double avaliacao;
-    private LocalDate dataLancamento;
-    private String sinapse;
 
-    public Titulo (DadosFilme dados) {
-        this.type = dados.type();
-        this.titulo = dados.titulo();
-        this.sinapse = ConsumoGPT.obterTraducao(dados.sinapse().trim());
-        this.duracao = Double.valueOf(dados.duracao().replace(" min", ""));
+    private final TipoTitulo tipo;
+    private final String titulo;
+    private final Integer temporadas;
+    private final Integer numeroEpisodio;
+    private final Double duracao;
+    private final Double avaliacao;
+    private final LocalDate dataLancamento;
+    private final String sinopse;
 
-        try {
-            this.avaliacao = Double.valueOf(dados.avaliacao());
-        } catch (NumberFormatException e) {
-            this.avaliacao = 0.0;
-        }
-
-        try {
-            this.dataLancamento = LocalDate.parse(dados.dataLancamento());
-        } catch (DateTimeException ex) {
-            this.dataLancamento = null;
-        }
+    public Titulo(
+            TipoTitulo tipo,
+            String titulo,
+            Integer temporadas,
+            Integer numeroEpisodio,
+            Double duracao,
+            Double avaliacao,
+            LocalDate dataLancamento,
+            String sinopse
+    ) {
+        this.tipo = tipo;
+        this.titulo = titulo;
+        this.temporadas = temporadas;
+        this.numeroEpisodio = numeroEpisodio;
+        this.duracao = duracao;
+        this.avaliacao = avaliacao;
+        this.dataLancamento = dataLancamento;
+        this.sinopse = sinopse;
     }
 
-    public Titulo (DadosSerie dados) {
-        this.type = dados.type();
-        this.titulo = dados.titulo();
-        this.sinapse = ConsumoGPT.obterTraducao(dados.sinapse().trim());
-        this.temporadas = Integer.valueOf(dados.temporadas());
-
-        try {
-            this.avaliacao = Double.valueOf(dados.avaliacao());
-        } catch (NumberFormatException e) {
-            this.avaliacao = 0.0;
-        }
-
-        try {
-            this.dataLancamento = LocalDate.parse(dados.dataLancamento());
-        } catch (DateTimeException ex) {
-            this.dataLancamento = null;
-        }
+    public TipoTitulo getTipo() {
+        return tipo;
     }
 
-    public Titulo (DadosEpisodio dados) {
-        this.titulo = dados.titulo();
-        this.numeroEpisodeo = dados.episodio();
-
-        try {
-            this.avaliacao = Double.valueOf(dados.avaliacao());
-        } catch (NumberFormatException e) {
-            this.avaliacao = 0.0;
-        }
-    }
-
-    public String getType() {
-        return type;
-    }
     public String getTitulo() {
         return titulo;
     }
+
     public Integer getTemporadas() {
         return temporadas;
     }
-    public Integer getNumeroEpisodeo() {
-        return numeroEpisodeo;
+
+    public Integer getNumeroEpisodio() {
+        return numeroEpisodio;
     }
+
     public Double getDuracao() {
         return duracao;
     }
+
     public Double getAvaliacao() {
         return avaliacao;
     }
+
     public LocalDate getDataLancamento() {
         return dataLancamento;
     }
 
+    public String getSinopse() {
+        return sinopse;
+    }
+
     @Override
     public String toString() {
-    
-        if ("movie".equalsIgnoreCase(type)) {
-            return """
+        return switch (tipo) {
+            case FILME -> """
                 Filme: %s
                 Avaliação: %.1f
                 Duração: %.0f min
                 Lançamento: %s
                 Sinopse: %s
-                """.formatted(titulo, avaliacao, duracao, dataLancamento, sinapse);
-        }
-    
-        if ("series".equalsIgnoreCase(type)) {
-            return """
+                """.formatted(titulo, avaliacao, duracao, dataLancamento, sinopse);
+
+            case SERIE -> """
                 Série: %s
                 Temporadas: %d
                 Avaliação: %.1f
                 Lançamento: %s
                 Sinopse: %s
-                """.formatted(titulo, temporadas, avaliacao, dataLancamento, sinapse);
-        }
-    
-        if (numeroEpisodeo != null) {
-            return """
+                """.formatted(titulo, temporadas, avaliacao, dataLancamento, sinopse);
+
+            case EPISODIO -> """
                 Episódio: %s
                 Número: %d
                 Avaliação: %.1f
-                """.formatted(titulo, numeroEpisodeo, avaliacao);
-        }
-    
-        return titulo;
+                """.formatted(titulo, numeroEpisodio, avaliacao);
+        };
     }
 }
