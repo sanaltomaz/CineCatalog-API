@@ -3,16 +3,28 @@ package com.sanal.omdb;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.sanal.omdb.principal.Principal;
-// import com.sanal.omdb.services.ConsumoGPT;
+import com.sanal.omdb.models.Titulo;
+import com.sanal.omdb.omdb.OmdbClient;
+import com.sanal.omdb.dto.omdb.DadosFilme;
+import com.sanal.omdb.services.TituloFactory;
+
+// import com.sanal.omdb.principal.Principal;
 
 @SpringBootApplication
 public class OmdbApplication {
 	
 	public static void main(String[] args) {
 		SpringApplication.run(OmdbApplication.class, args);
-		Principal principal = new Principal();
+		OmdbClient client = new OmdbClient();
 
-		principal.iniciarAplicacao();
+		Titulo t = new TituloFactory().fromFilme((DadosFilme) client.buscarTitulo("Inception"), null);
+		System.out.println(t);
+
+		// Object resultado = client.buscarTitulo("Inception");
+		// Titulo t = new TituloFactory().fromFilme(client.buscarDetalhesDoFilme("Inception"), null);
+		// System.out.println(t);
+		// Principal principal = new Principal();
+
+		// principal.iniciarAplicacao();
 	}
 }
