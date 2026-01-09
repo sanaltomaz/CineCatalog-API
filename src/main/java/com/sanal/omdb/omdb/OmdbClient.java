@@ -34,4 +34,25 @@ public class OmdbClient {
     - Nomes genéricos substituídos por responsabilidades explícitas
     */
 
+    // Busca informações gerais do título (filme ou série)
+    // buscarTituloPorNome(String nome);
+
+    // Retorna o tipo técnico do título (FILME, SERIE ou EPISODIO)
+    // identificarTipoDoTitulo(String nome);
+
+    // Retorna detalhes completos de um filme
+    // buscarDetalhesDoFilme(String nome);
+
+    // Retorna detalhes completos de uma série
+    // buscarDetalhesDaSerie(String nome);
+
+    // Retorna temporadas de uma série
+    // buscarTemporadasDaSerie(String nome);
+
+    // Retorna episódios de uma temporada específica
+    // buscarEpisodiosDaTemporada(String nome, int temporada);
+
+    // Retorna avaliações/ratings do título
+    // buscarAvaliacoesDoTitulo(String nome);
+
 }
