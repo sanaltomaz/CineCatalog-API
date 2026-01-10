@@ -9,61 +9,38 @@ import java.net.http.HttpResponse;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sanal.omdb.dto.omdb.DadosEpisodio;
-import com.sanal.omdb.dto.omdb.DadosFilme;
-import com.sanal.omdb.dto.omdb.DadosSerie;
+import com.sanal.omdb.dto.omdb.OmdbEpisodioDto;
+import com.sanal.omdb.dto.omdb.OmdbFilmeDto;
+import com.sanal.omdb.dto.omdb.OmdbSerieDto;
+import com.sanal.omdb.dto.omdb.OmdbTemporadaDto;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
+/**
+ * Concentra tudo que é específico da API do OMDB.
+ *
+ * Responsabilidades:
+ * - Montagem de URLs da OMDB
+ * - Chamada HTTP
+ * - Tratamento básico de erros externos
+ * - Conversão de JSON para DTOs externos
+ *
+ * Não contém:
+ * - Regras de negócio
+ * - Lógica de análise
+ * - Decisão de fluxo da aplicação
+ */
 @Component
 public class OmdbClient {
-    /*
-     Concentra tudo que é específico da API do OMDB.
 
-     Responsabilidades:
-     1. URL base
-     2. Chave de API
-     3. Formatos de requisição
-     4. Chamada HTTP
-     5. Tratamento básico de erros da API
-     6. Conversão de respostas JSON da OMDB para DTOs externos
+    private final Dotenv dotenv = Dotenv.load();
+    private final String endereco = dotenv.get("ENDERECO");
+    private final String apiKey = dotenv.get("API_KEY");
 
-     Objetivo:
-     - Isolar detalhes técnicos da OMDB
-     - Limpar a lógica de negócio do restante da aplicação
-     - Facilitar manutenção e futuras mudanças na API
-
-     Não deve conter:
-     7. Lógica de negócio da aplicação
-     8. Decisão de fluxo
-     9. Regras para decidir se o título é filme ou série no contexto do domínio
-     10. Impressão de dados
-     11. Controle de menus ou interação com usuário
-     12. Validação de entrada do usuário
-
-     Trade-offs assumidos:
-     - Pipeline frágil substituído por um único ponto de integração
-     - Múltiplas classes dependentes substituídas por fluxo centralizado e previsível
-     - Nomes genéricos substituídos por responsabilidades explícitas
-     */
-
-    private Dotenv dotenv = Dotenv.load();
-    private String endereco = dotenv.get("ENDERECO");
-    private String apiKey = dotenv.get("API_KEY");
-
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     /**
-     * Executa a chamada HTTP para a API da OMDB.
-     *
-     * Responsabilidade:
-     * - Realizar a requisição HTTP
-     * - Retornar o corpo da resposta como JSON bruto
-     *
-     * Observações:
-     * - Não interpreta o conteúdo da resposta
-     * - Não valida dados de domínio
-     * - Centraliza erros de comunicação externa
+     * Executa a chamada HTTP para a API da OMDB e retorna o JSON bruto.
      */
     private String consumirApiOmdb(String endereco) {
         try {
@@ -72,36 +49,19 @@ public class OmdbClient {
                     .uri(URI.create(endereco))
                     .build();
 
-            HttpResponse<String> response = null;
-
-            try {
-                response = client.send(
-                        request,
-                        HttpResponse.BodyHandlers.ofString()
-                );
-            } catch (IOException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            HttpResponse<String> response = client.send(
+                    request,
+                    HttpResponse.BodyHandlers.ofString()
+            );
 
             return response.body();
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Erro ao consumir a API OMDB", e);
         }
     }
 
     /**
-     * Monta a URL de consulta da OMDB e busca os dados do título pelo nome.
-     *
-     * Responsabilidade:
-     * - Preparar a requisição específica da OMDB
-     * - Delegar a chamada HTTP para o método de consumo
-     *
-     * Retorno:
-     * - JSON bruto retornado pela API da OMDB
-     *
-     * Observações:
-     * - Não identifica tipo
-     * - Não converte para objetos
+     * Busca os dados brutos de um título pelo nome.
      */
     private String buscarTituloPorNome(String nome) {
         String url = endereco + nome.replace(" ", "+") + apiKey;
@@ -109,78 +69,77 @@ public class OmdbClient {
     }
 
     /**
-     * Identifica o tipo técnico do título com base no formato da resposta da OMDB.
-     *
-     * Responsabilidade:
-     * - Inspecionar o JSON bruto retornado pela API
-     * - Determinar qual DTO externo representa corretamente o conteúdo
-     *
-     * Observações:
-     * - A lógica depende do formato da OMDB
-     * - Deve permanecer encapsulada neste client
-     * - Não representa regra de negócio do domínio
+     * Identifica o tipo técnico do título com base no JSON retornado pela OMDB.
      */
     private Class<?> identificarTipoDoTitulo(String json) {
-        try {
-            if (json.contains("\"Type\":\"movie\"")) {
-                return DadosFilme.class;
-            } else if (json.contains("\"Type\":\"series\"")) {
-                return DadosSerie.class;
-            } else if (json.contains("\"Episode\":")) {
-                return DadosEpisodio.class;
-            } else {
-                throw new IllegalArgumentException("Tipo desconhecido no JSON");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao identificar tipo do título", e);
+        if (json.contains("\"Type\":\"movie\"")) {
+            return OmdbFilmeDto.class;
         }
+        if (json.contains("\"Type\":\"series\"")) {
+            return OmdbSerieDto.class;
+        }
+        if (json.contains("\"Episode\":")) {
+            return OmdbEpisodioDto.class;
+        }
+        throw new RuntimeException("Tipo de título não suportado pela OMDB");
     }
 
     /**
-     * Método principal do OmdbClient.
+     * Busca um título genérico na OMDB e converte para o DTO externo apropriado.
      *
-     * Responsabilidade:
-     * - Coordenar a busca do título na OMDB
-     * - Identificar o tipo técnico do conteúdo retornado
-     * - Converter o JSON para o DTO externo correspondente
-     *
-     * Retorno:
-     * - DTO externo da OMDB (ex: DadosFilme ou DadosSerie)
-     *
-     * Observações:
-     * - Encapsula completamente detalhes da API
-     * - Não expõe JSON para o restante da aplicação
-     * - Retorno genérico é temporário e será refinado em etapas futuras
+     * Retorno genérico é intencional e será refinado futuramente.
      */
     public Object buscarTitulo(String nome) {
         String json = buscarTituloPorNome(nome);
         Class<?> tipo = identificarTipoDoTitulo(json);
 
         try {
-            if (tipo.equals(DadosFilme.class)) {
-                return mapper.readValue(json, DadosFilme.class);
-            }
-
-            if (tipo.equals(DadosSerie.class)) {
-                return mapper.readValue(json, DadosSerie.class);
-            }
-
-            if (tipo.equals(DadosEpisodio.class)) {
-                return mapper.readValue(json, DadosEpisodio.class);
-            }
-            
+            return mapper.readValue(json, tipo);
         } catch (Exception e) {
-            throw new RuntimeException(
-                    "Erro ao converter JSON para objeto: " + e.getMessage(),
-                    e
-            );
+            throw new RuntimeException("Erro ao converter JSON da OMDB", e);
         }
-
-        throw new RuntimeException("Tipo de título não suportado");
     }
 
-    // buscarDetalhesDaSerie(String nome);
-    // buscarTemporadasDaSerie(String nome);
-    // buscarEpisodiosDaTemporada(String nome, int temporada);
-    // buscarAvaliacoesDoTitulo(String nome);
+    /**
+     * Busca os dados base de uma série (sem episódios).
+     *
+     * Responsabilidade:
+     * - Consultar a OMDB pelo nome da série
+     * - Retornar apenas os metadados da série
+     */
+    public OmdbSerieDto buscarSerie(String nomeSerie) {
+        String json = buscarTituloPorNome(nomeSerie);
+
+        try {
+            return mapper.readValue(json, OmdbSerieDto.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao converter série da OMDB", e);
+        }
+    }
+
+    /**
+     * Busca uma temporada específica de uma série na OMDB.
+     *
+     * Responsabilidade:
+     * - Montar a URL com parâmetro de temporada
+     * - Retornar os episódios da temporada
+     *
+     * Observação:
+     * - Não realiza loop de temporadas
+     * - Não conhece regra de negócio
+     */
+    public OmdbTemporadaDto buscarTemporada(String nomeSerie, int temporada) {
+        String url = endereco
+                + nomeSerie.replace(" ", "+")
+                + "&Season=" + temporada
+                + apiKey;
+
+        String json = consumirApiOmdb(url);
+
+        try {
+            return mapper.readValue(json, OmdbTemporadaDto.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao converter temporada da OMDB", e);
+        }
+    }
 }
