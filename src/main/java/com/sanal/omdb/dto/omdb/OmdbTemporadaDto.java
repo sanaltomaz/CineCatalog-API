@@ -6,15 +6,15 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record DadosTemporada(
+public record OmdbTemporadaDto(
     @JsonAlias("Season") Integer numeroTemporada,
-    @JsonAlias("Episodes") List<DadosEpisodio> episodios
+    @JsonAlias("Episodes") List<OmdbEpisodioDto> episodios
 ) {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Temporada ").append(numeroTemporada).append(":\n");
-        for (DadosEpisodio episodio : episodios) {
+        for (OmdbEpisodioDto episodio : episodios) {
             sb.append("  Episódio ").append(episodio.episodio())
               .append(": ").append(episodio.titulo())
               .append(" (Avaliação: ").append(episodio.avaliacao()).append(")\n");
