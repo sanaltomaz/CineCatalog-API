@@ -116,6 +116,11 @@ public class TituloService {
      */
     public OmdbSerieCompletaDto buscarSerieComEpisodios(String nome) {
         OmdbSerieDto serie = buscarSerie(nome);
+
+        if (serie == null || serie.temporadas() == null) {
+            throw new IllegalStateException("Título não é uma série");
+        }
+        
         int totalTemporadas = serie.temporadas();
 
         List<OmdbTemporadaDto> temporadas = new ArrayList<>();
