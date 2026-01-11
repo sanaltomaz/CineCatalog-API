@@ -3,14 +3,14 @@ package com.sanal.omdb.services;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-import com.sanal.omdb.dto.omdb.DadosEpisodio;
-import com.sanal.omdb.dto.omdb.DadosFilme;
-import com.sanal.omdb.dto.omdb.DadosSerie;
+import com.sanal.omdb.dto.omdb.OmdbEpisodioDto;
+import com.sanal.omdb.dto.omdb.OmdbFilmeDto;
+import com.sanal.omdb.dto.omdb.OmdbSerieDto;
 import com.sanal.omdb.models.*;
 
 public class TituloFactory {
 
-    public Titulo fromFilme(DadosFilme dados, String sinopseTraduzida) {
+    public Titulo fromFilme(OmdbFilmeDto dados, String sinopseTraduzida) {
         return new Titulo(
                 TipoTitulo.FILME,
                 dados.titulo(),
@@ -23,7 +23,7 @@ public class TituloFactory {
         );
     }
 
-    public Titulo fromSerie(DadosSerie dados, String sinopseTraduzida) {
+    public Titulo fromSerie(OmdbSerieDto dados, String sinopseTraduzida) {
         return new Titulo(
                 TipoTitulo.SERIE,
                 dados.titulo(),
@@ -36,7 +36,7 @@ public class TituloFactory {
         );
     }
 
-    public Titulo fromEpisodio(DadosEpisodio dados) {
+    public Titulo fromEpisodio(OmdbEpisodioDto dados) {
         return new Titulo(
                 TipoTitulo.EPISODIO,
                 dados.titulo(),
