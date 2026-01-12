@@ -17,11 +17,14 @@ public class FilmeEntity extends TituloEntity {
     @Column(name = "duracao_minutos")
     private Double duracao;
 
-    protected FilmeEntity() {
-        // construtor exigido pelo JPA
+    public FilmeEntity() {
     }
 
     public Double getDuracao() {
         return duracao;
+    }
+
+    public void setDuracao(Double duracao) {
+        this.duracao = duracao;
     }
 }
