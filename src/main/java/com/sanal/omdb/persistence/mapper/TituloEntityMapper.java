@@ -1,5 +1,8 @@
 package com.sanal.omdb.persistence.mapper;
 
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
+
 import com.sanal.omdb.models.TipoTitulo;
 import com.sanal.omdb.models.Titulo;
 import com.sanal.omdb.persistence.entity.FilmeEntity;
@@ -24,6 +27,7 @@ import com.sanal.omdb.persistence.entity.TituloEntity;
  * - Este mapper conhece tanto o domínio quanto a persistência
  * - Ele é o ponto de acoplamento consciente entre esses dois mundos
  */
+@Component
 public class TituloEntityMapper {
 
     /**
@@ -39,9 +43,11 @@ public class TituloEntityMapper {
      * Observação:
      * - Séries e episódios terão métodos próprios
      */
+    @NonNull
     public FilmeEntity toFilmeEntity(Titulo titulo) {
+        
         if (titulo == null) {
-            return null;
+            throw new IllegalArgumentException("Título não pode ser nulo");
         }
 
         if (titulo.getTipo() != TipoTitulo.FILME) {
