@@ -8,11 +8,17 @@ import jakarta.persistence.*;
  * Episódios pertencem a uma única série e não existem de forma independente
  * no domínio principal do sistema.
  *
- * Esta entidade não herda de TituloEntity por não representar
- * um título principal.
+ * Decisões de modelagem:
+ * - Episódio NÃO herda de TituloEntity
+ * - Episódios são sempre vinculados a uma Série
+ * - Temporada é representada como número inteiro
+ *
+ * Observações:
+ * - Esta entidade não contém lógica de negócio
+ * - Persistência ocorre exclusivamente via services
  */
 @Entity
-@Table(name = "episodio")
+@Table(name = "episodio_entity")
 public class EpisodioEntity {
 
     @Id
@@ -33,7 +39,7 @@ public class EpisodioEntity {
     @JoinColumn(name = "serie_id", nullable = false)
     private SerieEntity serie;
 
-    protected EpisodioEntity() {
+    public EpisodioEntity() {
     }
 
     public Long getId() {
@@ -58,5 +64,27 @@ public class EpisodioEntity {
 
     public SerieEntity getSerie() {
         return serie;
+    }
+
+    /* Setters necessários para mapeamento */
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public void setNumeroEpisodio(Integer numeroEpisodio) {
+        this.numeroEpisodio = numeroEpisodio;
+    }
+
+    public void setNumeroTemporada(Integer numeroTemporada) {
+        this.numeroTemporada = numeroTemporada;
+    }
+
+    public void setAvaliacao(Double avaliacao) {
+        this.avaliacao = avaliacao;
+    }
+
+    public void setSerie(SerieEntity serie) {
+        this.serie = serie;
     }
 }
