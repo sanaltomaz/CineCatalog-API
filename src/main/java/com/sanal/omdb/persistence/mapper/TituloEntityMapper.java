@@ -6,26 +6,28 @@ import org.springframework.stereotype.Component;
 import com.sanal.omdb.models.TipoTitulo;
 import com.sanal.omdb.models.Titulo;
 import com.sanal.omdb.persistence.entity.FilmeEntity;
+import com.sanal.omdb.persistence.entity.SerieEntity;
 import com.sanal.omdb.persistence.entity.TituloEntity;
 
 /**
  * Mapper responsável por converter objetos de domínio (Titulo)
- * para entidades de persistência (TituloEntity e subclasses),
+ * para entidades de persistência (TituloEntity e suas especializações),
  * e vice-versa.
  *
- * Responsabilidade:
+ * Papel desta classe:
  * - Traduzir o modelo de domínio para o modelo relacional
- * - Isolar a camada de persistência do restante da aplicação
+ * - Centralizar a lógica de conversão entre camadas
  *
  * NÃO faz:
- * - Persistência em banco
- * - Decisão de fluxo
- * - Criação de entidades incompletas fora do contrato
- * - Conversão de DTOs externos (OMDB)
+ * - Persistência em banco de dados
+ * - Busca de informações externas
+ * - Decisão de fluxo da aplicação
+ * - Conversão de DTOs da OMDB
  *
  * Observação importante:
- * - Este mapper conhece tanto o domínio quanto a persistência
- * - Ele é o ponto de acoplamento consciente entre esses dois mundos
+ * Este mapper é o ponto de acoplamento consciente entre
+ * domínio e persistência. Todo o resto da aplicação
+ * permanece isolado do JPA.
  */
 @Component
 public class TituloEntityMapper {
@@ -34,18 +36,19 @@ public class TituloEntityMapper {
      * Converte um Titulo de domínio em uma entidade de Filme.
      *
      * Pré-condições:
-     * - O título deve ser do tipo FILME
+     * - O título não pode ser nulo
+     * - O tipo do título deve ser FILME
      *
      * Responsabilidade:
-     * - Copiar dados do domínio para a entidade
-     * - Não definir ID (gerado pelo JPA)
+     * - Copiar os dados do domínio para a entidade
+     * - Não definir o ID (gerado automaticamente pelo JPA)
      *
-     * Observação:
-     * - Séries e episódios terão métodos próprios
+     * @param titulo objeto de domínio
+     * @return entidade de filme pronta para persistência
      */
     @NonNull
     public FilmeEntity toFilmeEntity(Titulo titulo) {
-        
+
         if (titulo == null) {
             throw new IllegalArgumentException("Título não pode ser nulo");
         }
@@ -66,14 +69,53 @@ public class TituloEntityMapper {
     }
 
     /**
+     * Converte um Titulo de domínio em uma entidade de Série.
+     *
+     * Pré-condições:
+     * - O título não pode ser nulo
+     * - O tipo do título deve ser SERIE
+     *
+     * Responsabilidade:
+     * - Copiar os dados do domínio para a entidade
+     * - Não definir o ID (gerado automaticamente pelo JPA)
+     *
+     * @param titulo objeto de domínio
+     * @return entidade de série pronta para persistência
+     */
+    @NonNull
+    public SerieEntity toSerieEntity(Titulo titulo) {
+
+        if (titulo == null) {
+            throw new IllegalArgumentException("Título não pode ser nulo");
+        }
+
+        if (titulo.getTipo() != TipoTitulo.SERIE) {
+            throw new IllegalArgumentException("Título não é uma série");
+        }
+
+        SerieEntity entity = new SerieEntity();
+        entity.setTitulo(titulo.getTitulo());
+        entity.setAvaliacao(titulo.getAvaliacao());
+        entity.setDataLancamento(titulo.getDataLancamento());
+        entity.setSinopse(titulo.getSinopse());
+        entity.setTipo(titulo.getTipo());
+        entity.setTotalTemporadas(titulo.getTemporadas());
+
+        return entity;
+    }
+
+    /**
      * Converte uma entidade persistida em um objeto de domínio.
      *
      * Responsabilidade:
-     * - Reconstruir o domínio a partir do estado persistido
+     * - Reconstruir o domínio a partir do estado armazenado
      *
      * Observação:
      * - A implementação depende do tipo concreto da entidade
      * - Será expandida conforme novas entidades forem criadas
+     *
+     * @param entity entidade persistida
+     * @return objeto de domínio correspondente
      */
     public Titulo toDomain(TituloEntity entity) {
         if (entity == null) {
@@ -81,8 +123,8 @@ public class TituloEntityMapper {
         }
 
         // Implementação futura:
-        // - if (entity instanceof FilmeEntity) { ... }
-        // - if (entity instanceof SerieEntity) { ... }
+        // if (entity instanceof FilmeEntity) { ... }
+        // if (entity instanceof SerieEntity) { ... }
 
         throw new UnsupportedOperationException(
             "Conversão de entidade para domínio ainda não implementada"
@@ -90,13 +132,13 @@ public class TituloEntityMapper {
     }
 
     /*
-     * Métodos previstos para evolução:
+     * Evolução prevista:
      *
-     * - toSerieEntity(Titulo titulo)
-     * - toEpisodioEntity(Titulo titulo)
-     * - toDomain(FilmeEntity entity)
-     * - toDomain(SerieEntity entity)
+     * - toEpisodioEntity(...)
+     * - toDomain(FilmeEntity)
+     * - toDomain(SerieEntity)
      *
-     * Esses métodos surgirão conforme a persistência evoluir.
+     * Esses métodos serão adicionados conforme
+     * a camada de persistência evoluir.
      */
 }

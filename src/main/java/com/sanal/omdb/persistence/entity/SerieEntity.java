@@ -7,7 +7,14 @@ import jakarta.persistence.Entity;
  * Entidade que representa uma série persistida no sistema.
  *
  * Especialização de TituloEntity.
- * Armazena apenas metadados básicos da série.
+ *
+ * Responsabilidade:
+ * - Armazenar apenas os metadados básicos da série
+ *
+ * Observações:
+ * - Não contém episódios
+ * - Não contém regras de negócio
+ * - Relacionamentos serão adicionados futuramente
  */
 @Entity
 public class SerieEntity extends TituloEntity {
@@ -15,11 +22,17 @@ public class SerieEntity extends TituloEntity {
     @Column(name = "total_temporadas")
     private Integer totalTemporadas;
 
-    protected SerieEntity() {
-        // construtor exigido pelo JPA
+    /**
+     * Construtor padrão exigido pelo JPA.
+     */
+    public SerieEntity() {
     }
 
     public Integer getTotalTemporadas() {
         return totalTemporadas;
+    }
+
+    public void setTotalTemporadas(Integer totalTemporadas) {
+        this.totalTemporadas = totalTemporadas;
     }
 }
