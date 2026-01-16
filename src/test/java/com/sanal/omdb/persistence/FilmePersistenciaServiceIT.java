@@ -1,7 +1,18 @@
 package com.sanal.omdb.persistence;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import com.sanal.omdb.models.TipoTitulo;
+import com.sanal.omdb.models.Titulo;
+import com.sanal.omdb.persistence.entity.FilmeEntity;
+import com.sanal.omdb.persistence.repository.FilmeRepository;
+import com.sanal.omdb.persistence.service.FilmePersistenciaService;
 
 /**
  * Teste de integração para {@code FilmePersistenciaService}.
@@ -35,6 +46,34 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 public class FilmePersistenciaServiceIT {
 
-    // Testes serão adicionados incrementalmente
+    @Autowired
+    private FilmePersistenciaService filmePersistenciaService;
+
+    @Autowired
+    private FilmeRepository filmeRepository;
+
+    @Test
+    void devePersistirFilmeComSucesso() {
+        
+        // given - um domínio válido
+
+        Titulo titulo = new Titulo(
+            TipoTitulo.FILME,
+            "The Matrix",
+            null,
+            null,
+            null,
+            8.7,
+            null,
+            null
+        );
+
+        // when - persistimos usando o service real
+        FilmeEntity entity = filmePersistenciaService.salvarFilme(titulo);
+
+        // then - validamos efeitos reais no banco
+        assertNotNull(entity.getId(), "O filme deveria ter um ID gerado");
+        assertEquals(1, filmeRepository.count(), "Deveria existir exatamente um filme persistido");
+    }
 
 }

@@ -1,5 +1,7 @@
 package com.sanal.omdb.persistence.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.sanal.omdb.dto.omdb.OmdbEpisodioDto;
 import com.sanal.omdb.persistence.entity.EpisodioEntity;
 import com.sanal.omdb.persistence.entity.SerieEntity;
@@ -22,6 +24,7 @@ import com.sanal.omdb.persistence.entity.SerieEntity;
  * - Episódios sempre dependem de uma série existente
  * - Este mapper não cria entidades órfãs
  */
+@Component
 public class EpisodioEntityMapper {
 
     /**
