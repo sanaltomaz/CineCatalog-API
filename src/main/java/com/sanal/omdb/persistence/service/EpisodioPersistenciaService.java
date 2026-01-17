@@ -53,7 +53,6 @@ public class EpisodioPersistenciaService {
      * @param serie série persistida
      * @param temporadaDto dados da temporada
      */
-    @Transactional
     void salvarEpisodiosTemporada(
         SerieEntity serie,
         OmdbTemporadaDto temporadaDto
@@ -85,10 +84,15 @@ public class EpisodioPersistenciaService {
      * @param serie série persistida
      * @param serieCompletaDto dados completos da série
      */
+    @Transactional
     public void salvarTodosEpisodios(
         SerieEntity serie,
         OmdbSerieCompletaDto serieCompletaDto
     ) {
+        if (serie.getId() == null) {
+            throw new IllegalStateException("Série não persistida");
+        }
+
         if (serieCompletaDto.temporadas() == null || serieCompletaDto.temporadas().isEmpty()) {
             return;
         }
@@ -97,4 +101,5 @@ public class EpisodioPersistenciaService {
             salvarEpisodiosTemporada(serie, temporadaDto);
         });
     }
+
 }

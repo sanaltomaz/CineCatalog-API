@@ -49,6 +49,10 @@ public class EpisodioEntityMapper {
             throw new IllegalArgumentException("Dados de episódio não podem ser nulo");
         }
 
+        if (episodioDto.episodio() == null) {
+            throw new IllegalArgumentException("Número do episódio é obrigatório");
+        }
+
         if (serie == null) {
             throw new IllegalArgumentException("Série não pode ser nula");
         }
