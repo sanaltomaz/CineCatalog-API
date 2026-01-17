@@ -2,6 +2,7 @@ package com.sanal.omdb.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -115,4 +116,146 @@ class EpisodioPersistenciaServiceIT {
             assertEquals(serie.getId(), episodio.getSerie().getId());
         });
     }
+
+    @Test
+    void deveFalharAoPersistirEpisodiosComSerieNaoPersistida() {
+        // given - série NÃO persistida (sem ID)
+        SerieEntity serieNaoPersistida = new SerieEntity();
+        serieNaoPersistida.setTitulo("Breaking Bad");
+
+        OmdbSerieCompletaDto serieCompletaDto = new OmdbSerieCompletaDto(
+            new OmdbSerieDto(
+                "series",
+                "Breaking Bad",
+                5,
+                "9.5",
+                "20 Jan 2008",
+                "A high school chemistry teacher turned methamphetamine producer..."
+            ),
+            List.of(
+                new OmdbTemporadaDto(
+                    1,
+                    List.of(
+                        new OmdbEpisodioDto("Pilot", 1, "8.9")
+                    )
+                )
+            )
+        );
+
+        // when / then
+        assertThrows(
+            RuntimeException.class,
+            () -> episodioPersistenciaService.salvarTodosEpisodios(
+                serieNaoPersistida,
+                serieCompletaDto
+            ),
+            "Persistir episódios com série não persistida deve falhar"
+        );
+
+        // e nada deve ter sido persistido
+        assertEquals(
+            0,
+            episodioRepository.count(),
+            "Nenhum episódio deve ser persistido se a série não existir"
+        );
+    }
+
+    @Test
+    void naoDevePersistirEpisodiosQuandoTemporadaNaoPossuiEpisodios() {
+        // given - série persistida
+        Titulo tituloSerie = new Titulo(
+            TipoTitulo.SERIE,
+            "Breaking Bad",
+            null,
+            null,
+            null,
+            9.5,
+            null,
+            null
+        );
+
+        SerieEntity serie = seriePersistenciaService.salvarSerie(tituloSerie);
+
+        OmdbSerieCompletaDto serieCompletaDto = new OmdbSerieCompletaDto(
+            new OmdbSerieDto(
+                "series",
+                "Breaking Bad",
+                5,
+                "9.5",
+                "20 Jan 2008",
+                "A high school chemistry teacher turned methamphetamine producer..."
+            ),
+            List.of(
+                new OmdbTemporadaDto(
+                    1,
+                    List.of() // temporada SEM episódios
+                )
+            )
+        );
+
+        // when - tentamos persistir
+        episodioPersistenciaService.salvarTodosEpisodios(serie, serieCompletaDto);
+
+        // then - nada deve ser persistido
+        assertEquals(
+            0,
+            episodioRepository.count(),
+            "Nenhum episódio deve ser persistido para temporada vazia"
+        );
+    }
+
+    @Test
+    void deveFazerRollbackDaTemporadaQuandoAlgumEpisodioFalhar() {
+        // given - série persistida
+        Titulo tituloSerie = new Titulo(
+            TipoTitulo.SERIE,
+            "Breaking Bad",
+            null,
+            null,
+            null,
+            9.5,
+            null,
+            null
+        );
+    
+        SerieEntity serie = seriePersistenciaService.salvarSerie(tituloSerie);
+    
+        OmdbSerieCompletaDto serieCompletaDto = new OmdbSerieCompletaDto(
+            new OmdbSerieDto(
+                "series",
+                "Breaking Bad",
+                5,
+                "9.5",
+                "20 Jan 2008",
+                "A high school chemistry teacher turned methamphetamine producer..."
+            ),
+            List.of(
+                new OmdbTemporadaDto(
+                    1,
+                    List.of(
+                        new OmdbEpisodioDto("Pilot", 1, "8.9"),
+                        new OmdbEpisodioDto("Episode inválido", null, "8.0") // força falha
+                    )
+                )
+            )
+        );
+    
+        // when / then
+        assertThrows(
+            RuntimeException.class,
+            () -> episodioPersistenciaService.salvarTodosEpisodios(
+                serie,
+                serieCompletaDto
+            ),
+            "Falha em um episódio deve causar rollback da temporada inteira"
+        );
+    
+        // then - nenhum episódio da temporada deve existir
+        assertEquals(
+            0,
+            episodioRepository.count(),
+            "Nenhum episódio deve ser persistido após falha na temporada"
+        );
+    }
+
 }
