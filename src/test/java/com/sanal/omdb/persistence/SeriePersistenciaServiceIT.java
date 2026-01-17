@@ -2,6 +2,7 @@ package com.sanal.omdb.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,4 +75,50 @@ class SeriePersistenciaServiceIT {
         assertNotNull(entity.getId(), "A série deveria ter um ID gerado");
         assertEquals(1, serieRepository.count(), "Deveria existir exatamente uma série persistida");
     }
+
+    @Test
+    void deveFalharAoPersistirTituloQueNaoEhSerie() {
+        // given - título inválido para este service
+        Titulo titulo = new Titulo(
+            TipoTitulo.FILME,
+            "The Matrix",
+            null,
+            null,
+            null,
+            8.7,
+            null,
+            null
+        );
+
+        // when / then
+        assertThrows(
+            IllegalStateException.class,
+            () -> seriePersistenciaService.salvarSerie(titulo),
+            "Persistir um título que não é SERIE deve falhar"
+        );
+
+        // e nada deve ter sido persistido
+        assertEquals(
+            0,
+            serieRepository.count(),
+            "Nenhuma série deve ser persistida após falha"
+        );
+    }
+
+    @Test
+    void deveFalharAoPersistirTituloNulo() {
+        // when / then
+        assertThrows(
+            NullPointerException.class,
+            () -> seriePersistenciaService.salvarSerie(null),
+            "Persistir uma série nula deve falhar"
+        );
+
+        // e nada deve ter sido persistido
+        assertEquals(
+            0,
+            serieRepository.count(),
+            "Nenhuma série deve ser persistida ao receber título nulo"
+        );
+    } 
 }
