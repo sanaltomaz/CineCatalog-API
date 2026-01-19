@@ -1,73 +1,144 @@
 # OMDB Application (Spring Boot)
 
-Aplicação backend desenvolvida em Java com Spring Boot para consulta de títulos
-(filmes e séries) utilizando a API pública do OMDB.
+Aplicação backend desenvolvida em Java com Spring Boot para consulta e persistência de títulos (filmes e séries) utilizando a API pública do OMDB.
 
-O projeto teve origem em exercícios de curso, mas evoluiu para uma arquitetura
-própria, com separação clara de responsabilidades, integração externa centralizada
-e preparação para expansão com persistência e interface web.
+O projeto teve origem em exercícios de curso, mas evoluiu para uma arquitetura própria, com separação clara de responsabilidades, integração externa isolada, persistência explícita e documentação arquitetural mínima.
 
-Atualmente, o projeto já não está mais diretamente acoplado ao material do curso
-que o originou.
+Atualmente, o projeto já não está mais diretamente acoplado ao material do curso que o originou.
 
 ---
 
-## Arquitetura
+## Visão Geral da Arquitetura
 
-A aplicação segue um modelo em camadas, com foco em clareza, isolamento de
-responsabilidades e evolução gradual.
+A aplicação segue um modelo em camadas, priorizando:
 
-Camadas utilizadas no momento:
+* Separação clara de responsabilidades
+* Isolamento de integrações externas
+* Domínio independente de frameworks e APIs externas
+* Persistência explícita e previsível
+* Evolução incremental, evitando antecipar complexidade
 
-- Interface (temporária)
-  Camada de entrada baseada em menu de console (CLI).
-  Existe apenas para interação local e validação de fluxos.
-  Será substituída futuramente por controllers REST.
+As decisões arquiteturais e seus trade-offs estão documentadas em arquivos próprios na pasta docs/.
 
-- Services de Aplicação
-  Responsáveis por orquestrar os casos de uso.
-  Coordenam chamadas ao client externo e a conversão de dados para o domínio.
-  Exemplos:
-  - TituloService
-  - SerieAnaliseService
+---
 
-- Services de Domínio / Análise
-  Contêm lógica de processamento e análise de dados já carregados.
-  Não realizam chamadas HTTP, não interagem com o usuário e não dependem de UI.
+## Camadas do Sistema
 
-- Integração Externa
-  Comunicação com a API do OMDB centralizada em um client dedicado.
-  Essa camada isola detalhes técnicos da API externa do restante da aplicação.
+### Interface (temporária)
 
-- Domínio
-  Modelos internos que representam conceitos do sistema.
-  Mantidos independentes de DTOs externos.
+Camada de entrada baseada em menu de console (CLI).
 
-- DTOs Externos
-  Estruturas utilizadas exclusivamente para mapear respostas da API do OMDB.
-  Não fazem parte do domínio da aplicação.
+* Existe apenas para validação local de fluxos
+* Não contém lógica de negócio
+* Será substituída futuramente por controllers REST
+
+---
+
+### Services de Aplicação
+
+Responsáveis por:
+
+* Orquestrar casos de uso
+* Coordenar chamadas ao client de integração externa
+* Decidir quando e como dados devem ser persistidos
+
+Não realizam:
+
+* Persistência direta
+* Parsing de dados externos
+* Lógica de análise complexa
+
+---
+
+### Integração Externa (OMDB)
+
+A comunicação com a API do OMDB é centralizada em um client dedicado.
+
+Características:
+
+* Toda chamada HTTP é isolada nesta camada
+* DTOs externos existem apenas aqui
+* Dados inconsistentes ou instáveis são tratados na borda do sistema
+* Nenhuma outra camada conhece detalhes da API externa
+
+---
+
+### Domínio
+
+O domínio representa os conceitos centrais do sistema, como títulos, filmes e séries.
+
+Decisões:
+
+* O domínio não depende de DTOs externos
+* O domínio não depende de JPA ou detalhes de persistência
+* Conversões externas para domínio são feitas por factories dedicadas
+
+O domínio é tratado como a parte mais estável do sistema.
+
+---
+
+### Persistência
+
+A camada de persistência é explícita e desacoplada do restante da aplicação.
+
+Características:
+
+* Uso de JPA apenas nesta camada
+* Conversão domínio → entidade via mappers dedicados
+* Ordem de persistência controlada manualmente pelos services
+
+---
+
+#### Aggregate Root
+
+* Série é tratada como aggregate root
+* Episódios dependem de uma série existente
+* Episódios não existem de forma independente no sistema
+
+---
+
+#### Persistência de Episódios
+
+Regras adotadas:
+
+* A série deve estar persistida antes de qualquer episódio
+* Episódios são persistidos por temporada
+* Cada temporada é tratada como uma unidade transacional
+* Não existe transação global envolvendo todas as temporadas da série
+
+Consequências assumidas:
+
+* Falha em uma temporada não afeta temporadas já persistidas
+* O sistema aceita estados parciais por série
+* Idempotência não é garantida neste estágio
+
+---
+
+#### Relacionamentos e Cascade
+
+Decisões atuais:
+
+* Não é utilizado cascade JPA
+* Relacionamentos são unidirecionais
+* Persistência é totalmente controlada pelos services
+
+Essas decisões evitam complexidade prematura e tornam o fluxo explícito.
 
 ---
 
 ## Configuração do Ambiente
 
 A aplicação depende de variáveis de ambiente para acessar serviços externos.
-É responsabilidade de quem executa o projeto configurá-las corretamente
-em sua máquina local.
 
 Crie um arquivo .env na raiz do projeto com as seguintes variáveis:
 
 API_KEY=sua_chave_da_omdb
-ENDERECO=https://www.omdbapi.com/?t=
+ENDERECO=[https://www.omdbapi.com/?t=](https://www.omdbapi.com/?t=)
 
-Descrição das variáveis:
+Descrição:
 
-- API_KEY
-  Chave de acesso fornecida pela API do OMDB.
-
-- ENDERECO
-  Endpoint base utilizado para consultas por título.
-  A composição final da URL é responsabilidade do client de integração.
+* API_KEY: chave de acesso fornecida pela API do OMDB
+* ENDERECO: endpoint base utilizado para consultas por título
 
 ---
 
@@ -78,32 +149,35 @@ A aplicação pode ser executada a partir da classe principal:
 com.sanal.omdb.OmdbApplication
 
 No estado atual, a aplicação inicia um menu em modo CLI que permite:
-- buscar filmes e séries
-- listar episódios de séries
-- exibir melhores e piores episódios com base em avaliação
+
+* Buscar filmes e séries
+* Listar episódios de séries
+* Executar análises simples sobre episódios
 
 ---
 
 ## Estado Atual do Projeto
 
 Funcionalidades implementadas:
-- Integração com a API do OMDB
-- Consulta de filmes e séries
-- Análise de episódios de séries
-- Arquitetura preparada para expansão
+
+* Integração com a API do OMDB
+* Persistência de filmes, séries e episódios
+* Persistência transacional por temporada
+* Testes de integração com banco PostgreSQL
+* Documentação arquitetural mínima
 
 Funcionalidades planejadas:
-- Tratamento explícito de erros de domínio
-- Persistência de dados com JPA
-- Exposição de endpoints REST
-- Integração com serviços externos adicionais
+
+* Exposição de endpoints REST
+* Tratamento explícito de erros de domínio
+* Atualização incremental de dados persistidos
+* Evolução do modelo de concorrência
 
 ---
 
-## Observações
+## Observações Finais
 
-- O menu em modo texto é temporário e existe apenas como ferramenta de apoio
-  durante o desenvolvimento.
-- A lógica de negócio não depende da interface atual.
-- O projeto está estruturado para permitir evolução sem necessidade de grandes
-  refatorações.
+* O menu em modo texto é temporário
+* A lógica de negócio não depende da interface atual
+* O projeto prioriza clareza arquitetural e decisões explícitas
+* Este README e os arquivos em docs/ devem evoluir junto com o sistema
