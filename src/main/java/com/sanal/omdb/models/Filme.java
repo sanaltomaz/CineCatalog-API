@@ -23,7 +23,7 @@ public class Filme {
         this.dataLancamento = dataLancamento;
     }
 
-    public Filme criar (
+    public static Filme criar (
             String titulo,
             Integer duracao,
             Double avaliacao,
