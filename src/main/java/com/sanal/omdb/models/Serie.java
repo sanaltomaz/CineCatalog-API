@@ -1,12 +1,15 @@
 package com.sanal.omdb.models;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
-public class Serie {
+public final class Serie {
     private final String titulo;
     private final Double avaliacao;
     private final LocalDate dataLancamento;
     private final String sinopse;
+    private final Set<Temporada> temporadas = new HashSet<>();
 
     private Serie(
             String titulo,
@@ -42,6 +45,17 @@ public class Serie {
         );
     }
 
+    public void adicionarTemporada(int numeroTemporada) {
+        boolean existe = temporadas.stream()
+            .anyMatch(t -> t.getNumero() == numeroTemporada);
+
+        if (existe) {
+            throw new IllegalArgumentException("A temporada já existe nesta série.");
+        }
+
+        temporadas.add(Temporada.criar(numeroTemporada));
+    }
+
     public String getTitulo() {
         return titulo;
     }
@@ -56,6 +70,10 @@ public class Serie {
 
     public String getSinopse() {
         return sinopse;
+    }
+
+    public Set<Temporada> getTemporadas() {
+        return Set.copyOf(temporadas);
     }
 
 }
