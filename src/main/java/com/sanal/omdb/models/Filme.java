@@ -2,7 +2,7 @@ package com.sanal.omdb.models;
 
 import java.time.LocalDate;
 
-public class Filme {
+public final class Filme {
     private final String titulo;
     private final Integer duracao;
     private final Double avaliacao;
