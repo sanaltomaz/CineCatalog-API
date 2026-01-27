@@ -45,15 +45,25 @@ public final class Serie {
         );
     }
 
-    public void adicionarTemporada(int numeroTemporada) {
-        boolean existe = temporadas.stream()
-            .anyMatch(t -> t.getNumero() == numeroTemporada);
+    public Episodio criarEpisodio(
+            int numeroTemporada,
+            String titulo,
+            int numeroEpisodio,
+            Double avaliacao
+    ) {
+        Temporada temporada = obterOuCriarTemporada(numeroTemporada);
+        return temporada.criarEpisodio(titulo, numeroEpisodio, avaliacao);
+    }
 
-        if (existe) {
-            throw new IllegalArgumentException("A temporada já existe nesta série.");
-        }
-
-        temporadas.add(Temporada.criar(numeroTemporada));
+    private Temporada obterOuCriarTemporada(int numeroTemporada) {
+        return temporadas.stream()
+            .filter(t -> t.getNumero() == numeroTemporada)
+            .findFirst()
+            .orElseGet(() -> {
+                Temporada nova = Temporada.criar(numeroTemporada);
+                temporadas.add(nova);
+                return nova;
+            });
     }
 
     public String getTitulo() {
