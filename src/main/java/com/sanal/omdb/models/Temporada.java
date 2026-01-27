@@ -6,7 +6,7 @@ import java.util.Set;
 public final class Temporada {
 
     private final int numero;
-    private final Set<Integer> episodios = new HashSet<>();
+    private final Set<Episodio> episodios = new HashSet<>();
 
     private Temporada(int numero) {
         this.numero = numero;
@@ -19,21 +19,28 @@ public final class Temporada {
         return new Temporada(numero);
     }
 
-    public void adicionarEpisodio(int numeroEpisodio) {
-        if (numeroEpisodio < 1) {
-            throw new IllegalArgumentException("O número do episódio deve ser maior que zero.");
+    public Episodio criarEpisodio(String titulo, int numero, Double avaliacao) {
+        boolean existe = episodios.stream()
+            .anyMatch(t -> t.getNumeroEpisodio() == numero);
+
+        if (existe) {
+            throw new IllegalArgumentException("Já existe episódio com o número %d nesta temporada."
+                .formatted(numero)
+            );
         }
 
-        if (!episodios.add(numeroEpisodio)) {
-            throw new IllegalArgumentException("O episódio já existe nesta temporada.");
-        }
+        Episodio e = new Episodio(titulo, numero, avaliacao);
+
+        episodios.add(e);
+        return e;
     }
+
 
     public int getNumero() {
         return numero;
     }
 
-    public Set<Integer> getEpisodios() {
+    public Set<Episodio> getEpisodios() {
         return Set.copyOf(episodios);
     }
 }
