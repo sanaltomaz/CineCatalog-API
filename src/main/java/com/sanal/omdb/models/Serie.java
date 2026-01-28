@@ -4,11 +4,30 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Aggregate root do domínio de séries.
+ *
+ * <p>
+ * Responsável por governar temporadas e orquestrar a criação de episódios,
+ * garantindo que todas as invariantes estruturais do domínio sejam respeitadas.
+ *
+ * A {@code Serie} decide em qual temporada um episódio será criado, mas delega
+ * a criação do episódio à {@link Temporada}.
+ *
+ * Não contém lógica de persistência, integração externa ou regras internas
+ * de episódios.
+ */
 public final class Serie {
+
     private final String titulo;
     private final Double avaliacao;
     private final LocalDate dataLancamento;
     private final String sinopse;
+
+    /**
+     * Define a fronteira do aggregate:
+     * temporadas não existem fora do contexto de uma série.
+     */
     private final Set<Temporada> temporadas = new HashSet<>();
 
     private Serie(
@@ -23,7 +42,10 @@ public final class Serie {
         this.sinopse = sinopse;
     }
 
-    public static Serie criar (
+    /**
+     * Cria uma série válida, garantindo suas invariantes básicas.
+     */
+    public static Serie criar(
             String titulo,
             Double avaliacao,
             LocalDate dataLancamento,
@@ -38,13 +60,16 @@ public final class Serie {
         }
 
         return new Serie(
-            titulo, 
-            avaliacao, 
-            dataLancamento, 
+            titulo,
+            avaliacao,
+            dataLancamento,
             sinopse
         );
     }
 
+    /**
+     * Orquestra a criação de um episódio em uma temporada da série.
+     */
     public Episodio criarEpisodio(
             int numeroTemporada,
             String titulo,
@@ -85,5 +110,4 @@ public final class Serie {
     public Set<Temporada> getTemporadas() {
         return Set.copyOf(temporadas);
     }
-
 }
