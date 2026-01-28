@@ -2,7 +2,23 @@ package com.sanal.omdb.models;
 
 import java.time.LocalDate;
 
+/**
+ * Entidade de domínio que representa um filme.
+ *
+ * <p>
+ * {@code Filme} é uma entidade independente no domínio e não pertence
+ * a nenhum aggregate. Seu ciclo de vida não depende de outras entidades.
+ *
+ * <p>
+ * Mantém apenas invariantes locais e não governa nem delega
+ * comportamentos para outras partes do domínio.
+ *
+ * <p>
+ * Esta classe não contém lógica de persistência, integração externa
+ * ou regras de agregação.
+ */
 public final class Filme {
+
     private final String titulo;
     private final Integer duracao;
     private final Double avaliacao;
@@ -23,7 +39,10 @@ public final class Filme {
         this.dataLancamento = dataLancamento;
     }
 
-    public static Filme criar (
+    /**
+     * Cria um filme válido garantindo suas invariantes locais.
+     */
+    public static Filme criar(
             String titulo,
             Integer duracao,
             Double avaliacao,
@@ -43,10 +62,10 @@ public final class Filme {
         }
 
         return new Filme(
-            titulo, 
-            duracao, 
-            avaliacao, 
-            sinopse, 
+            titulo,
+            duracao,
+            avaliacao,
+            sinopse,
             dataLancamento
         );
     }
@@ -70,5 +89,4 @@ public final class Filme {
     public LocalDate getDataLancamento() {
         return dataLancamento;
     }
-
 }
