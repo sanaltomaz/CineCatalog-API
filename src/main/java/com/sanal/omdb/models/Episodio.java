@@ -1,14 +1,25 @@
 package com.sanal.omdb.models;
 
+/**
+ * Entidade de domínio que representa um episódio de uma temporada.
+ *
+ * <p>
+ * {@code Episodio} é uma entidade fraca e não possui autonomia de criação.
+ * Sua instância só pode existir dentro do contexto de uma {@link Temporada}.
+ *
+ * <p>
+ * Esta classe mantém apenas invariantes locais e não governa
+ * regras estruturais do domínio.
+ */
 public final class Episodio {
-    
+
     private final String titulo;
     private final int numeroEpisodio;
     private final Double avaliacao;
 
     Episodio(
-            String titulo, 
-            int numeroEpisodio, 
+            String titulo,
+            int numeroEpisodio,
             Double avaliacao
     ) {
         if (titulo == null || titulo.isBlank()) {
@@ -36,6 +47,4 @@ public final class Episodio {
     public Double getAvaliacao() {
         return avaliacao;
     }
-
-    
 }
