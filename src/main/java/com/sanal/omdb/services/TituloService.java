@@ -33,7 +33,7 @@ import com.sanal.omdb.omdb.OmdbClient;
 public class TituloService {
 
     private final OmdbClient omdbClient;
-    private final TituloFactory tituloFactory = new TituloFactory();
+    private final OmdbDomainFactory tituloFactory = new OmdbDomainFactory();
 
     public TituloService(OmdbClient omdbClient) {
         this.omdbClient = omdbClient;
