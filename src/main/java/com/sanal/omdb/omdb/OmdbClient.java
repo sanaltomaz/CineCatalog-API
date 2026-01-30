@@ -122,6 +122,16 @@ public class OmdbClient {
         }
     }
 
+    public OmdbFilmeDto buscarFilme(String nomeFilme) {
+        String json = buscarTituloPorNome(nomeFilme);
+
+        try {
+            return mapper.readValue(json, OmdbFilmeDto.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao converter filme da OMDB", e);
+        }
+    }
+
     /**
      * Busca uma temporada específica de uma série na OMDB.
      *
