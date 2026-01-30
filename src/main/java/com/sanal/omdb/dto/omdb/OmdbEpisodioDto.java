@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record OmdbEpisodioDto(
     @JsonAlias("Title") String titulo,
-    @JsonAlias("Episode") Integer episodio,
+    @JsonAlias("Episode") int episodio,
     @JsonAlias("imdbRating") String avaliacao
 ) {
 }
