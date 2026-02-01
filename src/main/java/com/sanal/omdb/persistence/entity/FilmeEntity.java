@@ -65,27 +65,27 @@ public class FilmeEntity {
         return dataLancamento;
     }
 
-    void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    void setTitulo(String titulo) {
+    public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
 
-    void setDuracao(Integer duracao) {
+    public void setDuracao(Integer duracao) {
         this.duracao = duracao;
     }
 
-    void setAvaliacao(Double avaliacao) {
+    public void setAvaliacao(Double avaliacao) {
         this.avaliacao = avaliacao;
     }
 
-    void setSinopse(String sinopse) {
+    public void setSinopse(String sinopse) {
         this.sinopse = sinopse;
     }
 
-    void setDataLancamento(LocalDate dataLancamento) {
+    public void setDataLancamento(LocalDate dataLancamento) {
         this.dataLancamento = dataLancamento;
     }
 }
