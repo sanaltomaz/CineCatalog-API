@@ -1,5 +1,7 @@
 package com.sanal.omdb.persistence.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +32,9 @@ public class SerieEntity {
     private Double avaliacao;
     private String sinopse;
 
+    @Column(name = "data_lancamento")
+    private LocalDate dataLancamento;
+
     @Column(name = "total_temporadas", nullable = false)
     private Integer totalTemporadas;
 
@@ -55,27 +60,35 @@ public class SerieEntity {
         return sinopse;
     }
 
+    public LocalDate getDataLancamento() {
+        return dataLancamento;
+    }
+
     public Integer getTotalTemporadas() {
         return totalTemporadas;
     }
 
-    void setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    void setTitulo(String titulo) {
+    public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
 
-    void setAvaliacao(Double avaliacao) {
+    public void setAvaliacao(Double avaliacao) {
         this.avaliacao = avaliacao;
     }
 
-    void setSinopse(String sinopse) {
+    public void setSinopse(String sinopse) {
         this.sinopse = sinopse;
     }
 
-    void setTotalTemporadas(Integer totalTemporadas) {
+    public void setDataLancamento(LocalDate dataLancamento) {
+        this.dataLancamento = dataLancamento;
+    }
+
+    public void setTotalTemporadas(Integer totalTemporadas) {
         this.totalTemporadas = totalTemporadas;
     }
 }
