@@ -22,10 +22,6 @@ public class SerieEntityMapper {
      * ou persistência.
      */
     public Serie toDomain(SerieEntity entity) {
-        if (entity == null) {
-            throw new IllegalArgumentException("A entidade de série não pode ser nula.");
-        }
-
         return Serie.criar(
             entity.getTitulo(),
             entity.getAvaliacao(),
@@ -42,10 +38,6 @@ public class SerieEntityMapper {
      * o carregamento de temporadas ou episódios.
      */
     public SerieEntity toEntity(Serie domain) {
-        if (domain == null) {
-            throw new IllegalArgumentException("A série do domínio não pode ser nula.");
-        }
-
         SerieEntity entity = new SerieEntity();
         entity.setTitulo(domain.getTitulo());
         entity.setAvaliacao(domain.getAvaliacao());
