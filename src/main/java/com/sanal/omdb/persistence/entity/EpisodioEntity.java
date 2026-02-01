@@ -5,14 +5,17 @@ import jakarta.persistence.*;
 /**
  * Entidade que representa um episódio de uma série.
  *
+ * <p>
  * Episódios pertencem a uma única série e não existem de forma independente
  * no domínio principal do sistema.
  *
+ * <p>
  * Decisões de modelagem:
  * - Episódio NÃO herda de TituloEntity
  * - Episódios são sempre vinculados a uma Série
  * - Temporada é representada como número inteiro
  *
+ * <p>
  * Observações:
  * - Esta entidade não contém lógica de negócio
  * - Persistência ocorre exclusivamente via services
@@ -29,10 +32,10 @@ public class EpisodioEntity {
     private String titulo;
 
     @Column(name = "numero_episodio", nullable = false)
-    private Integer numeroEpisodio;
+    private int numeroEpisodio;
 
     @Column(name = "numero_temporada", nullable = false)    
-    private Integer numeroTemporada;
+    private int numeroTemporada;
 
     private Double avaliacao;
 
@@ -43,6 +46,8 @@ public class EpisodioEntity {
     public EpisodioEntity() {
     }
 
+    // Getters
+
     public Long getId() {
         return id;
     }
@@ -51,11 +56,11 @@ public class EpisodioEntity {
         return titulo;
     }
 
-    public Integer getNumeroEpisodio() {
+    public int getNumeroEpisodio() {
         return numeroEpisodio;
     }
 
-    public Integer getNumeroTemporada() {
+    public int getNumeroTemporada() {
         return numeroTemporada;
     }
 
@@ -67,17 +72,17 @@ public class EpisodioEntity {
         return serie;
     }
 
-    /* Setters necessários para mapeamento */
-
+    // Setters
+    
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
 
-    public void setNumeroEpisodio(Integer numeroEpisodio) {
+    public void setNumeroEpisodio(int numeroEpisodio) {
         this.numeroEpisodio = numeroEpisodio;
     }
 
-    public void setNumeroTemporada(Integer numeroTemporada) {
+    public void setNumeroTemporada(int numeroTemporada) {
         this.numeroTemporada = numeroTemporada;
     }
 
