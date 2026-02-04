@@ -1,12 +1,17 @@
 package com.sanal.omdb.persistence.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.sanal.omdb.models.Episodio;
+import com.sanal.omdb.models.Temporada;
 import com.sanal.omdb.persistence.entity.EpisodioEntity;
 import com.sanal.omdb.persistence.entity.SerieEntity;
 import com.sanal.omdb.persistence.mapper.EpisodioEntityMapper;
 import com.sanal.omdb.persistence.repository.EpisodioRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class EpisodioPersistenceService {
@@ -34,7 +39,7 @@ public class EpisodioPersistenceService {
      * Validações realizadas aqui são apenas estruturais,
      * relacionadas ao uso correto da camada de persistência.
      */
-    public void salvarEpisodio(
+    private void salvarEpisodio(
             Episodio episodio,
             SerieEntity serie,
             int numeroTemporada
@@ -53,5 +58,32 @@ public class EpisodioPersistenceService {
 
         EpisodioEntity entity = mapper.toEntity(episodio, serie, numeroTemporada);
         episodioRepository.save(entity);
+    }
+
+    /**
+     * Persiste todos os episódios de uma temporada.
+     *
+     * <p>
+     * Pré-condições assumidas:
+     * - A série já está persistida
+     * - Os episódios já respeitam todas as invariantes de domínio
+     * 
+     * <p>
+     * Pós-condições:
+     * - Todos os episódios da temporada foram persistidos com sucesso
+     * 
+     * Garantia:
+     * - Ou TODOS os episódios da temporada são persistidos
+     * - Ou NENHUM é persistido
+     */
+    @Transactional
+    public void salvarTemporada(
+            SerieEntity serie,
+            int numeroTemporada,
+            List<Episodio> episodios
+    ) {
+        for (Episodio episodio : episodios) {
+            salvarEpisodio(episodio, serie, numeroTemporada);
+        }
     }
 }
