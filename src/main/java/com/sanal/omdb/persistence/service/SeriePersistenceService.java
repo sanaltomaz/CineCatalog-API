@@ -1,13 +1,12 @@
 package com.sanal.omdb.persistence.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sanal.omdb.models.Serie;
 import com.sanal.omdb.persistence.entity.SerieEntity;
 import com.sanal.omdb.persistence.mapper.SerieEntityMapper;
 import com.sanal.omdb.persistence.repository.SerieRepository;
-
-import jakarta.transaction.Transactional;
 
 /**
  * Service responsável pela persistência de séries.
