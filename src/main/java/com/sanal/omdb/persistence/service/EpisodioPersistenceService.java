@@ -82,6 +82,12 @@ public class EpisodioPersistenceService {
             int numeroTemporada,
             List<Episodio> episodios
     ) {
+        if (episodios == null || episodios.isEmpty()) {
+            throw new IllegalArgumentException(
+                "Lista de episódios não pode ser nula ou vazia"
+            );
+        }
+        
         for (Episodio episodio : episodios) {
             salvarEpisodio(episodio, serie, numeroTemporada);
         }
