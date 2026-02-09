@@ -26,6 +26,6 @@ public interface EpisodioRepository extends JpaRepository<EpisodioEntity, Long> 
 
     List<EpisodioEntity> findBySerieIdAndNumeroTemporada(
         Long serieId,
-        Integer numeroTemporada
+        int numeroTemporada
     );
 }
