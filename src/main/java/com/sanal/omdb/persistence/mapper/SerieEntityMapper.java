@@ -1,5 +1,7 @@
 package com.sanal.omdb.persistence.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.sanal.omdb.models.Serie;
 import com.sanal.omdb.persistence.entity.SerieEntity;
 
@@ -11,6 +13,7 @@ import com.sanal.omdb.persistence.entity.SerieEntity;
  * Este mapper trabalha apenas com os metadados básicos da série.
  * Temporadas e episódios NÃO são carregados nem persistidos aqui.
  */
+@Component
 public class SerieEntityMapper {
 
     /**

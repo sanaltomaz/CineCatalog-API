@@ -1,5 +1,7 @@
 package com.sanal.omdb.persistence.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.sanal.omdb.models.Filme;
 import com.sanal.omdb.persistence.entity.FilmeEntity;
 
@@ -11,6 +13,7 @@ import com.sanal.omdb.persistence.entity.FilmeEntity;
  * Trabalha exclusivamente com os metadados do filme.
  * Não envolve regras de negócio nem decisões de fluxo.
  */
+@Component
 public class FilmeEntityMapper {
     
     /**
