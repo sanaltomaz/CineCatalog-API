@@ -27,9 +27,9 @@ public class SerieEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String titulo;
-    private Double avaliacao;
+    private String avaliacao;
     private String sinopse;
 
     @Column(name = "data_lancamento")
@@ -52,7 +52,7 @@ public class SerieEntity {
         return titulo;
     }
 
-    public Double getAvaliacao() {
+    public String getAvaliacao() {
         return avaliacao;
     }
 
@@ -68,15 +68,11 @@ public class SerieEntity {
         return totalTemporadas;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
 
-    public void setAvaliacao(Double avaliacao) {
+    public void setAvaliacao(String avaliacao) {
         this.avaliacao = avaliacao;
     }
 

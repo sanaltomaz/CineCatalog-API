@@ -37,7 +37,7 @@ public class EpisodioEntity {
     @Column(name = "numero_temporada", nullable = false)    
     private int numeroTemporada;
 
-    private Double avaliacao;
+    private String avaliacao;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "serie_id", nullable = false)
@@ -64,7 +64,7 @@ public class EpisodioEntity {
         return numeroTemporada;
     }
 
-    public Double getAvaliacao() {
+    public String getAvaliacao() {
         return avaliacao;
     }
 
@@ -86,7 +86,7 @@ public class EpisodioEntity {
         this.numeroTemporada = numeroTemporada;
     }
 
-    public void setAvaliacao(Double avaliacao) {
+    public void setAvaliacao(String avaliacao) {
         this.avaliacao = avaliacao;
     }
 

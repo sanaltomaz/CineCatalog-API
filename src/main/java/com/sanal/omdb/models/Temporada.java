@@ -56,7 +56,7 @@ public final class Temporada {
     public Episodio criarEpisodio(
             String titulo, 
             int numero, 
-            Double avaliacao
+            String avaliacao
     ) {
         boolean existe = episodios.stream()
             .anyMatch(t -> t.getNumeroEpisodio() == numero);

@@ -20,7 +20,7 @@ import java.util.Set;
 public final class Serie {
 
     private final String titulo;
-    private final Double avaliacao;
+    private final String avaliacao;
     private final LocalDate dataLancamento;
     private final String sinopse;
 
@@ -32,7 +32,7 @@ public final class Serie {
 
     private Serie(
             String titulo,
-            Double avaliacao,
+            String avaliacao,
             LocalDate dataLancamento,
             String sinopse
     ) {
@@ -47,16 +47,12 @@ public final class Serie {
      */
     public static Serie criar(
             String titulo,
-            Double avaliacao,
+            String avaliacao,
             LocalDate dataLancamento,
             String sinopse
     ) {
         if (titulo == null || titulo.isBlank()) {
             throw new IllegalArgumentException("O título da série é obrigatório.");
-        }
-
-        if (avaliacao != null && (avaliacao < 0 || avaliacao > 10)) {
-            throw new IllegalArgumentException("A avaliação da série deve estar entre 0 e 10.");
         }
 
         return new Serie(
@@ -74,14 +70,14 @@ public final class Serie {
             int numeroTemporada,
             String titulo,
             int numeroEpisodio,
-            Double avaliacao
+            String avaliacao
     ) {
         Temporada temporada = obterOuCriarTemporada(numeroTemporada);
         return temporada.criarEpisodio(titulo, numeroEpisodio, avaliacao);
     }
 
     private Temporada obterOuCriarTemporada(int numeroTemporada) {
-        return temporadas.stream()
+        return temporadas.stream()  
             .filter(t -> t.getNumero() == numeroTemporada)
             .findFirst()
             .orElseGet(() -> {
@@ -95,7 +91,7 @@ public final class Serie {
         return titulo;
     }
 
-    public Double getAvaliacao() {
+    public String getAvaliacao() {
         return avaliacao;
     }
 

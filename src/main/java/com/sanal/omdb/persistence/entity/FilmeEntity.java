@@ -32,7 +32,7 @@ public class FilmeEntity {
 
     @Column(name = "duracao_minutos", nullable = false)
     private Integer duracao;
-    private Double avaliacao;
+    private String avaliacao;
     private String sinopse;
 
     @Column(name = "data_lancamento")
@@ -53,7 +53,7 @@ public class FilmeEntity {
         return duracao;
     }
 
-    public Double getAvaliacao() {
+    public String getAvaliacao() {
         return avaliacao;
     }
 
@@ -77,7 +77,7 @@ public class FilmeEntity {
         this.duracao = duracao;
     }
 
-    public void setAvaliacao(Double avaliacao) {
+    public void setAvaliacao(String avaliacao) {
         this.avaliacao = avaliacao;
     }
 
