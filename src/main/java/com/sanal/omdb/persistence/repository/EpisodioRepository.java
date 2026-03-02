@@ -28,4 +28,6 @@ public interface EpisodioRepository extends JpaRepository<EpisodioEntity, Long> 
         Long serieId,
         int numeroTemporada
     );
+
+    void deleteBySerieId(Long serieId);
 }

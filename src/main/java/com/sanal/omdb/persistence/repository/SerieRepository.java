@@ -1,5 +1,7 @@
 package com.sanal.omdb.persistence.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.sanal.omdb.persistence.entity.SerieEntity;
@@ -15,4 +17,7 @@ import com.sanal.omdb.persistence.entity.SerieEntity;
  * - Operações de relacionamento são tratadas pelo JPA
  */
 public interface SerieRepository extends JpaRepository<SerieEntity, Long> {
+
+    Optional<SerieEntity> findByTitulo(String titulo);
+    
 }

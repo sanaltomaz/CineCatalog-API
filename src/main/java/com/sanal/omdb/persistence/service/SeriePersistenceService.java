@@ -4,8 +4,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sanal.omdb.models.Serie;
+import com.sanal.omdb.models.Temporada;
 import com.sanal.omdb.persistence.entity.SerieEntity;
 import com.sanal.omdb.persistence.mapper.SerieEntityMapper;
+import com.sanal.omdb.persistence.repository.EpisodioRepository;
 import com.sanal.omdb.persistence.repository.SerieRepository;
 
 /**
@@ -28,31 +30,44 @@ public class SeriePersistenceService {
 
     private final SerieRepository serieRepository;
     private final SerieEntityMapper mapper;
+    private final EpisodioPersistenceService episodioService;
+    private final EpisodioRepository episodioRepository;
 
     public SeriePersistenceService(
             SerieRepository serieRepository,
-            SerieEntityMapper mapper
+            SerieEntityMapper mapper,
+            EpisodioPersistenceService episodioService,
+            EpisodioRepository episodioRepository
     ) {
         this.serieRepository = serieRepository;
         this.mapper = mapper;
+        this.episodioService = episodioService;
+        this.episodioRepository = episodioRepository;
     }
 
-    /**
-     * Persiste os metadados básicos de uma série.
-     *
-     * <p>
-     * Pré-condições:
-     * - A {@link Serie} já foi validada no domínio
-     * - Não contém temporadas persistidas
-     *
-     * <p>
-     * Pós-condições:
-     * - Série persistida
-     * - Retorna a entidade com ID gerado
-     */
     @Transactional
-    public SerieEntity salvar(Serie serie) {
-        SerieEntity entity = mapper.toEntity(serie);
-        return serieRepository.save(entity);
+    public void saveSnapshot(Serie serie) {
+
+        SerieEntity entity = serieRepository
+            .findByTitulo(serie.getTitulo())
+            .orElse(null);
+        
+        if (entity == null) {
+            entity = mapper.toEntity(serie);
+            serieRepository.save(entity);
+        } else {
+            episodioRepository.deleteBySerieId(entity.getId());
+
+            entity.setAvaliacao(serie.getAvaliacao());
+            entity.setDataLancamento(serie.getDataLancamento());
+            entity.setSinopse(serie.getSinopse());
+            entity.setTotalTemporadas(serie.getTemporadas().size());
+        }
+
+        for (Temporada t : serie.getTemporadas()) {
+            episodioService.salvarTemporada(
+                entity, t.getNumero(), t.getEpisodios());
+        }
+        
     }
 }

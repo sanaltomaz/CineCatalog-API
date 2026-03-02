@@ -1,6 +1,7 @@
 package com.sanal.omdb.persistence.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -10,8 +11,6 @@ import com.sanal.omdb.persistence.entity.EpisodioEntity;
 import com.sanal.omdb.persistence.entity.SerieEntity;
 import com.sanal.omdb.persistence.mapper.EpisodioEntityMapper;
 import com.sanal.omdb.persistence.repository.EpisodioRepository;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class EpisodioPersistenceService {
@@ -76,11 +75,10 @@ public class EpisodioPersistenceService {
      * - Ou TODOS os episódios da temporada são persistidos
      * - Ou NENHUM é persistido
      */
-    @Transactional
     public void salvarTemporada(
             SerieEntity serie,
             int numeroTemporada,
-            List<Episodio> episodios
+            Set<Episodio> episodios
     ) {
         if (episodios == null || episodios.isEmpty()) {
             throw new IllegalArgumentException(
