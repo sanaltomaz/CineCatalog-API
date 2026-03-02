@@ -32,7 +32,7 @@ public class OmdbDomainFactory {
         return Filme.criar(
             dto.titulo(),
             parseDuracao(dto.duracao()),
-            parseAvaliacao(dto.avaliacao()),
+            dto.avaliacao(),
             null,
             parseData(dto.dataLancamento())
         );
@@ -41,7 +41,7 @@ public class OmdbDomainFactory {
     public Serie criarSerie(OmdbSerieDto dto) {
         return Serie.criar(
             dto.titulo(),
-            parseAvaliacao(dto.avaliacao()),
+            dto.avaliacao(),
             parseData(dto.dataLancamento()),
             null
         );
@@ -50,17 +50,6 @@ public class OmdbDomainFactory {
     /* =======================
        Parsing utilitário
        ======================= */
-
-    private Double parseAvaliacao(String avaliacao) {
-        if (avaliacao == null || avaliacao.equalsIgnoreCase("N/A")) {
-            return null;
-        }
-        try {
-            return Double.valueOf(avaliacao);
-        } catch (Exception e) {
-            return null;
-        }
-    }
 
     private Integer parseDuracao(String duracao) {
         if (duracao == null || duracao.equalsIgnoreCase("N/A")) {
