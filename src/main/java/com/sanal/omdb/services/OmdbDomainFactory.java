@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
+import org.springframework.stereotype.Service;
+
 import com.sanal.omdb.dto.omdb.OmdbFilmeDto;
 import com.sanal.omdb.dto.omdb.OmdbSerieDto;
 import com.sanal.omdb.models.Filme;
@@ -23,6 +25,7 @@ import com.sanal.omdb.models.Serie;
  * Não decide fluxo, não conhece persistência
  * e não cria entidades dependentes de contexto estrutural.
  */
+@Service
 public class OmdbDomainFactory {
 
     private static final DateTimeFormatter OMDB_DATE_FORMAT =
