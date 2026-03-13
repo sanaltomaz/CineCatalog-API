@@ -22,8 +22,7 @@ public class SerieController {
     }
 
     @PostMapping("/ingest")
-    public ResponseEntity<String> ingerirSerie
-    (
+    public ResponseEntity<String> ingerirSerie(
         @RequestBody IngestaoRequestDto request
     ) {
         ingestaoService.ingestarSerie(request.nome());
@@ -43,5 +42,20 @@ public class SerieController {
     @GetMapping
     public ResponseEntity<List<SerieResponseDto>> listar() {
         return ResponseEntity.ok(queryService.listarTodasSeries());
+    }
+
+    @GetMapping("/titulo")
+    public ResponseEntity<SerieResponseDto> buscarPorTitulo(
+        @RequestParam String titulo
+    ) {
+        return ResponseEntity.ok(queryService.buscarSeriePorTitulo(titulo));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletarSerie(
+        @PathVariable Long id
+    ) {
+        queryService.deletarSerie(id);
+        return ResponseEntity.ok("Série deletada com sucesso!");
     }
 }

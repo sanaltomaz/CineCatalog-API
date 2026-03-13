@@ -47,4 +47,11 @@ public class SerieQueryService {
             .map(this::toDto)
             .collect(Collectors.toList());
     }
+
+    public void deletarSerie(Long id) {
+        if (!serieRepository.existsById(id)){
+            throw new RuntimeException("Série não encontrada: ID " + id);
+        }
+        serieRepository.deleteById(id);
+    }
 }
