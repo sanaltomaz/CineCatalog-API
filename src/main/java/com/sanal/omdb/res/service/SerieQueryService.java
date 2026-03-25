@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.sanal.omdb.persistence.entity.SerieEntity;
 import com.sanal.omdb.persistence.repository.SerieRepository;
-import com.sanal.omdb.res.dto.SerieResponseDto;
+import com.sanal.omdb.res.dto.SerieIngestaoResponseDto;
 
 @Service
 public class SerieQueryService {
@@ -18,8 +18,8 @@ public class SerieQueryService {
         this.serieRepository = serieRepository;
     }
 
-    private SerieResponseDto toDto(SerieEntity entity) {
-        return new SerieResponseDto(
+    private SerieIngestaoResponseDto toDto(SerieEntity entity) {
+        return new SerieIngestaoResponseDto(
             entity.getId(),
             entity.getTitulo(),
             entity.getAvaliacao(),
@@ -28,21 +28,21 @@ public class SerieQueryService {
         );
     }
 
-    public SerieResponseDto buscarSeriePorTitulo(String titulo) {
+    public SerieIngestaoResponseDto buscarSeriePorTitulo(String titulo) {
         SerieEntity serieEntity = serieRepository.findByTitulo(titulo)
             .orElseThrow(() -> new RuntimeException("Série não encontrada: " + titulo));
         
         return toDto(serieEntity);
     }
 
-    public SerieResponseDto buscarSeriePorId(Long id) {
+    public SerieIngestaoResponseDto buscarSeriePorId(Long id) {
         SerieEntity serieEntity = serieRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Série não encontrada: ID " + id));
         
         return toDto(serieEntity);
     }
 
-    public List<SerieResponseDto> listarTodasSeries() {
+    public List<SerieIngestaoResponseDto> listarTodasSeries() {
         return serieRepository.findAll().stream()
             .map(this::toDto)
             .collect(Collectors.toList());

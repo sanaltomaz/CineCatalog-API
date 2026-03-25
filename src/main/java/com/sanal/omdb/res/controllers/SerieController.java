@@ -1,8 +1,9 @@
 package com.sanal.omdb.res.controllers;
 
 import com.sanal.omdb.application.injestao.SerieIngestaoApplicationService;
-import com.sanal.omdb.res.dto.IngestaoRequestDto;
-import com.sanal.omdb.res.dto.SerieResponseDto;
+import com.sanal.omdb.application.injestao.result.SerieIngestaoResultado;
+import com.sanal.omdb.res.dto.SerieIngestaoRequestDto;
+import com.sanal.omdb.res.dto.SerieIngestaoResponseDto;
 import com.sanal.omdb.res.service.SerieQueryService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/series")
 public class SerieController {
-    
+
     private final SerieIngestaoApplicationService ingestaoService;
     private final SerieQueryService queryService;
 
@@ -22,30 +23,39 @@ public class SerieController {
     }
 
     @PostMapping("/ingest")
-    public ResponseEntity<String> ingerirSerie(
-        @RequestBody IngestaoRequestDto request
+    public ResponseEntity<SerieIngestaoResponseDto> ingerirSerie(
+        @RequestBody SerieIngestaoRequestDto request
     ) {
-        ingestaoService.ingestarSerie(request.nome());
+        SerieIngestaoResultado resultado =
+                ingestaoService.ingestarSerie(request.nome());
 
-        return ResponseEntity.status(
-            HttpStatus.CREATED
-        ).body("Série ingerida com sucesso!");
+        SerieIngestaoResponseDto response =
+                new SerieIngestaoResponseDto(
+                        resultado.titulo(),
+                        resultado.totalTemporadas(),
+                        resultado.totalEpisodios(),
+                        resultado.criada()
+                );
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
-    
+
     @GetMapping("/{id}")
-    public ResponseEntity<SerieResponseDto> buscarPorId(
+    public ResponseEntity<SerieIngestaoResponseDto> buscarPorId(
         @PathVariable Long id
     ) {
         return ResponseEntity.ok(queryService.buscarSeriePorId(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<SerieResponseDto>> listar() {
+    public ResponseEntity<List<SerieIngestaoResponseDto>> listar() {
         return ResponseEntity.ok(queryService.listarTodasSeries());
     }
 
     @GetMapping("/titulo")
-    public ResponseEntity<SerieResponseDto> buscarPorTitulo(
+    public ResponseEntity<SerieIngestaoResponseDto> buscarPorTitulo(
         @RequestParam String titulo
     ) {
         return ResponseEntity.ok(queryService.buscarSeriePorTitulo(titulo));
