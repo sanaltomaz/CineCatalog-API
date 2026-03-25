@@ -66,8 +66,11 @@ public class SeriePersistenceService {
 
         for (Temporada t : serie.getTemporadas()) {
             episodioService.salvarTemporada(
-                entity, t.getNumero(), t.getEpisodios());
+                    entity, t.getNumero(), t.getEpisodios());
         }
-        
+    }
+
+    public boolean findByTitulo(String titulo) {
+        return serieRepository.existsByTitulo(titulo);
     }
 }

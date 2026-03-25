@@ -19,5 +19,6 @@ import com.sanal.omdb.persistence.entity.SerieEntity;
 public interface SerieRepository extends JpaRepository<SerieEntity, Long> {
 
     Optional<SerieEntity> findByTitulo(String titulo);
+    boolean existsByTitulo(String titulo);
     
 }
