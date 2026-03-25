@@ -21,7 +21,7 @@ import jakarta.persistence.Id;
  * - Não contém regras de negócio
  */
 @Entity
-public class SerieEntity {
+public class    SerieEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
